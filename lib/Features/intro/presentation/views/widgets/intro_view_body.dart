@@ -33,7 +33,9 @@ class IntroViewBody extends StatelessWidget {
         ]),
         Text(
           AppTexts.introSubTitle,
-          style: Styles.styleRegular14(context).copyWith(),
+          style: Styles.styleRegular14(context).copyWith(
+            height: 24 / 14,
+          ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tasky/Features/intro/presentation/views/intro_view.dart';
 import 'package:tasky/core/helper_functions/onGenerate_function.dart';
+import 'package:tasky/core/services/shared_preferences_singleton.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Prefs.init();
   runApp(const TaskyApp());
 }
 
@@ -11,7 +14,8 @@ class TaskyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
+      theme: ThemeData(fontFamily: 'DM Sans'),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: onGenerateRoute,
       initialRoute: IntroView.routeName,
