@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:tasky/Features/Auth/presentation/views/sign_in_view.dart';
 import 'package:tasky/Features/intro/presentation/views/intro_view.dart';
+import 'package:tasky/constants.dart';
 import 'package:tasky/core/helper_functions/onGenerate_function.dart';
 import 'package:tasky/core/services/shared_preferences_singleton.dart';
 
@@ -18,7 +20,9 @@ class TaskyApp extends StatelessWidget {
       theme: ThemeData(fontFamily: 'DM Sans'),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: onGenerateRoute,
-      initialRoute: IntroView.routeName,
+      initialRoute: Prefs.getBool(kIsIntroViewSeen)
+          ? SignInView.routeName
+          : IntroView.routeName,
     );
   }
 }

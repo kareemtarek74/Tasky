@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tasky/Features/Auth/presentation/views/sign_in_view.dart';
+import 'package:tasky/constants.dart';
+import 'package:tasky/core/services/shared_preferences_singleton.dart';
 import 'package:tasky/core/text_styles.dart';
 import 'package:tasky/core/utils/app_images.dart';
 
@@ -13,6 +15,7 @@ class CustomIntroButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
         onPressed: () {
+          Prefs.setBool(kIsIntroViewSeen, true);
           Navigator.of(context).pushReplacementNamed(SignInView.routeName);
         },
         style: ElevatedButton.styleFrom(
