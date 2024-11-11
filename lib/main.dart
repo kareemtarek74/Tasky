@@ -4,6 +4,7 @@ import 'package:tasky/Features/intro/presentation/views/intro_view.dart';
 import 'package:tasky/constants.dart';
 import 'package:tasky/core/helper_functions/onGenerate_function.dart';
 import 'package:tasky/core/services/shared_preferences_singleton.dart';
+import 'package:tasky/core/utils/app_colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,7 +18,9 @@ class TaskyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      theme: ThemeData(fontFamily: 'DM Sans'),
+      theme: ThemeData(
+          fontFamily: 'DM Sans',
+          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor)),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: onGenerateRoute,
       initialRoute: Prefs.getBool(kIsIntroViewSeen)

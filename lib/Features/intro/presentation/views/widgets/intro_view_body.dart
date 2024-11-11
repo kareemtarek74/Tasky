@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:tasky/Features/intro/presentation/views/widgets/custom_intro_button.dart';
+import 'package:tasky/Features/Auth/presentation/views/sign_in_view.dart';
+import 'package:tasky/constants.dart';
+import 'package:tasky/core/services/shared_preferences_singleton.dart';
 import 'package:tasky/core/text_styles.dart';
 import 'package:tasky/core/utils/app_images.dart';
 import 'package:tasky/core/utils/app_texts.dart';
+import 'package:tasky/core/widgets/custom_button.dart';
 
 class IntroViewBody extends StatelessWidget {
   const IntroViewBody({super.key});
@@ -41,9 +44,17 @@ class IntroViewBody extends StatelessWidget {
         const SizedBox(
           height: 32,
         ),
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 22),
-          child: CustomIntroButton(),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 22),
+          child: CustomButton(
+            onPressed: () {
+              Prefs.setBool(kIsIntroViewSeen, true);
+              Navigator.of(context).pushReplacementNamed(SignInView.routeName);
+            },
+            text: 'Let’s Start',
+            style: Styles.styleBold19(context),
+            hasIcon: true,
+          ),
         ),
       ],
     );
