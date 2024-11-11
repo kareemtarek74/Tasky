@@ -19,8 +19,9 @@ class TaskyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-          fontFamily: 'DM Sans',
-          colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor)),
+        fontFamily: 'DM Sans',
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primaryColor),
+      ),
       debugShowCheckedModeBanner: false,
       onGenerateRoute: onGenerateRoute,
       initialRoute: Prefs.getBool(kIsIntroViewSeen)

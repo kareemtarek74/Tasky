@@ -30,7 +30,7 @@ class SignInViewBody extends StatelessWidget {
                     image: AssetImage(Assets.imagesAvatar),
                   ),
                   Positioned(
-                    bottom: 90,
+                    bottom: 100,
                     left: 24.5,
                     child: Text(
                       'Login',
@@ -38,7 +38,7 @@ class SignInViewBody extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                      bottom: 15,
+                      bottom: 20,
                       left: 24.5,
                       right: 24.5,
                       child: CustomPhoneField(
@@ -54,7 +54,6 @@ class SignInViewBody extends StatelessWidget {
                         },
                       )),
                 ]),
-                const SizedBox(height: 5),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 24.5),
                   child: Column(

@@ -20,11 +20,13 @@ class CustomPhoneField extends StatelessWidget {
   Widget build(BuildContext context) {
     return IntlPhoneField(
       decoration: InputDecoration(
+        fillColor: Colors.white,
+        filled: true,
         counterText: "",
         labelText: "123 456-7890",
         labelStyle: Styles.styleRegular14(context),
         border: buildBorder(),
-        contentPadding: const EdgeInsets.symmetric(horizontal: 4),
+        contentPadding: const EdgeInsets.all(15),
         focusedBorder: buildBorder(),
         enabledBorder: buildBorder(),
       ),

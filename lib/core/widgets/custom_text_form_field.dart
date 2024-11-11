@@ -12,10 +12,12 @@ class CustomTextFormField extends StatelessWidget {
     return TextFormField(
       keyboardType: keyboardType,
       decoration: InputDecoration(
+          fillColor: Colors.white,
+          filled: true,
           suffixIcon: suffixIcon,
           hintText: hintText,
           hintStyle: Styles.styleRegular14(context),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 15),
+          contentPadding: const EdgeInsets.all(15),
           border: buildBorder(),
           focusedBorder: buildBorder(),
           enabledBorder: buildBorder()),
