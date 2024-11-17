@@ -1,3 +1,5 @@
+import 'package:tasky/core/Api/end_points.dart';
+
 class ErrorModel {
   final String message;
   final String? error;
@@ -8,9 +10,9 @@ class ErrorModel {
 
   factory ErrorModel.fromJson(Map<String, dynamic> json) {
     return ErrorModel(
-      message: json['message'],
-      error: json['error'] ?? 'error',
-      statusCode: json['statusCode'],
+      message: json[ApiKeys.message],
+      error: json[ApiKeys.error] ?? 'error',
+      statusCode: json[ApiKeys.statusCode],
     );
   }
 }
