@@ -20,7 +20,7 @@ class SignUpViewBody extends StatelessWidget {
             Stack(
               children: [
                 Container(
-                  height: MediaQuery.sizeOf(context).height,
+                  height: 780,
                   width: double.infinity,
                   decoration: const BoxDecoration(
                     color: Colors.white,
@@ -100,14 +100,9 @@ class SignUpViewBody extends StatelessWidget {
                         .copyWith(color: Colors.white),
                   ),
                 ),
-                const Positioned(
-                  bottom: 5,
-                  left: 24.5,
-                  right: 24.5,
-                  child: AlreadyHaveAccount(),
-                ),
               ],
-            )
+            ),
+            const AlreadyHaveAccount()
           ],
         ),
       ),
