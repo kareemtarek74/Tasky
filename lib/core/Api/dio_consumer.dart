@@ -1,11 +1,24 @@
 import 'package:dio/dio.dart';
 import 'package:tasky/core/Api/api_consumer.dart';
+import 'package:tasky/core/Api/api_interceptors.dart';
+import 'package:tasky/core/Api/end_points.dart';
 import 'package:tasky/core/Errors/exceptions.dart';
 
 class DioConsumer extends ApiConsumer {
   final Dio dio;
 
-  DioConsumer({required this.dio});
+  DioConsumer({required this.dio}) {
+    dio.options.baseUrl = EndPoints.baseUrl;
+    dio.interceptors.add(ApiInterceptors());
+    dio.interceptors.add(LogInterceptor(
+      request: true,
+      requestHeader: true,
+      requestBody: true,
+      responseHeader: true,
+      responseBody: true,
+      error: true,
+    ));
+  }
   @override
   Future delete(String path,
       {Object? data, Map<String, dynamic>? queryParameters}) async {
@@ -31,7 +44,7 @@ class DioConsumer extends ApiConsumer {
   }
 
   @override
-  Future patch(String path,
+  Future put(String path,
       {Object? data, Map<String, dynamic>? queryParameters}) async {
     try {
       final response =
