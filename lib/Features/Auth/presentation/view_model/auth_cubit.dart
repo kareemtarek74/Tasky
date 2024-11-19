@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:tasky/Features/Auth/Domain/repos/login_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
 
 import 'auth_state.dart';
@@ -8,16 +9,20 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
   int minPhoneLength = 10;
   int maxPhoneLength = 15;
   final RegisterRepo registerRepo;
+  final LoginRepo loginRepo;
 
-  AuthCubitCubit({required this.registerRepo})
+  AuthCubitCubit({required this.loginRepo, required this.registerRepo})
       : super(const AuthCubitInitial());
 
   final registerFormKey = GlobalKey<FormState>();
+  final loginFormKey = GlobalKey<FormState>();
   final registerNameController = TextEditingController();
   final registerPasswordController = TextEditingController();
   final registerPhoneController = TextEditingController();
   final registerExperienceController = TextEditingController();
   final registerAddressController = TextEditingController();
+  final loginPhoneController = TextEditingController();
+  final loginPasswordController = TextEditingController();
 
   void updateCountryCode(String newCode, int minLength, int maxLength) {
     minPhoneLength = minLength;
@@ -56,6 +61,19 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
       emit(RegisterErrorState(error));
     }, (userEntity) {
       emit(RegisterSuccessState(registerEntity: userEntity));
+    });
+  }
+
+  Future<void> loginUser() async {
+    emit(LoginLoadingState());
+    final response = await loginRepo.loginUser(
+        phone: loginPhoneController.text,
+        password: loginPasswordController.text);
+
+    response.fold((error) {
+      emit(LoginErrorState(error));
+    }, (loginentity) {
+      emit(LoginSuccessState(loginEntity: loginentity));
     });
   }
 }

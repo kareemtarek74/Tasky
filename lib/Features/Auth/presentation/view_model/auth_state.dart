@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:tasky/Features/Auth/Domain/Entites/login_entity.dart';
 import 'package:tasky/Features/Auth/Domain/Entites/register_entity.dart';
 
 abstract class AuthCubitState extends Equatable {
@@ -59,4 +60,21 @@ class RegisterErrorState extends AuthCubitState {
   final String? errorMessage;
 
   const RegisterErrorState(this.errorMessage);
+}
+
+class LoginLoadingState extends AuthCubitState {}
+
+class LoginSuccessState extends AuthCubitState {
+  final LoginEntity loginEntity;
+
+  const LoginSuccessState({required this.loginEntity});
+
+  @override
+  List<Object?> get props => [loginEntity];
+}
+
+class LoginErrorState extends AuthCubitState {
+  final String? errorMessage;
+
+  const LoginErrorState(this.errorMessage);
 }
