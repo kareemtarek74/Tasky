@@ -8,17 +8,20 @@ class CustomPhoneField extends StatelessWidget {
   final Function(String completeNumber, String number)? onPhoneChanged;
   final Function(String dialCode, int minLength, int maxLength)?
       onCountryChanged;
+  final TextEditingController? controller;
 
   const CustomPhoneField({
     super.key,
     this.initialCountryCode = 'EG',
     this.onPhoneChanged,
     this.onCountryChanged,
+    this.controller,
   });
 
   @override
   Widget build(BuildContext context) {
     return IntlPhoneField(
+      controller: controller,
       decoration: InputDecoration(
         fillColor: Colors.white,
         filled: true,

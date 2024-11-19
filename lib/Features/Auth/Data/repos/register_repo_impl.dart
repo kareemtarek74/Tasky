@@ -24,6 +24,7 @@ class RegisterRepoImpl extends RegisterRepo {
       final response = await apiConsumer.post(
         EndPoints.register,
         data: {
+          ApiKeys.name: name,
           ApiKeys.phone: phone,
           ApiKeys.password: password,
           ApiKeys.experience: yearsOfExperience,

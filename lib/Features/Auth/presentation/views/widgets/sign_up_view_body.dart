@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
 import 'package:tasky/Features/Auth/presentation/views/widgets/already_have_account.dart';
 import 'package:tasky/Features/Auth/presentation/views/widgets/experience_level_drop_down.dart';
 import 'package:tasky/core/text_styles.dart';
@@ -15,96 +17,113 @@ class SignUpViewBody extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Stack(
-              children: [
-                Container(
-                  height: 780,
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                  ),
-                ),
-                const Image(
-                  image: AssetImage(Assets.imagesSignUPAvatar),
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                ),
-                Positioned(
-                  bottom: 490,
-                  left: 24.5,
-                  child: Text(
-                    'Login',
-                    style: Styles.styleBold24(context),
-                  ),
-                ),
-                const Positioned(
-                  bottom: 425,
-                  left: 24.5,
-                  right: 24.5,
-                  child: CustomTextFormField(
-                    hintText: 'Name...',
-                    keyboardType: TextInputType.name,
-                  ),
-                ),
-                const Positioned(
-                  bottom: 360,
-                  left: 24.5,
-                  right: 24.5,
-                  child: CustomPhoneField(),
-                ),
-                const Positioned(
-                  bottom: 295,
-                  left: 24.5,
-                  right: 24.5,
-                  child: CustomTextFormField(
-                    hintText: 'Years of experience...',
-                    keyboardType: TextInputType.number,
-                  ),
-                ),
-                const Positioned(
-                  bottom: 230,
-                  left: 24.5,
-                  right: 24.5,
-                  child: ExperienceLevelDropdown(),
-                ),
-                const Positioned(
-                  bottom: 165,
-                  left: 24.5,
-                  right: 24.5,
-                  child: CustomTextFormField(hintText: 'Address...'),
-                ),
-                const Positioned(
-                  bottom: 100,
-                  left: 24.5,
-                  right: 24.5,
-                  child: CustomTextFormField(
-                    hintText: 'Password...',
-                    suffixIcon: Icon(
-                      Icons.remove_red_eye_outlined,
-                      color: Color(0xffBABABA),
-                      size: 22,
+        child: Form(
+          key: BlocProvider.of<AuthCubitCubit>(context).registerFormKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    height: 780,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: 30,
-                  left: 24.5,
-                  right: 24.5,
-                  child: CustomButton(
-                    text: 'Sign up',
-                    hasIcon: false,
-                    onPressed: () {},
-                    style: Styles.styleBold16(context)
-                        .copyWith(color: Colors.white),
+                  const Image(
+                    image: AssetImage(Assets.imagesSignUPAvatar),
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
-                ),
-              ],
-            ),
-            const AlreadyHaveAccount()
-          ],
+                  Positioned(
+                    bottom: 490,
+                    left: 24.5,
+                    child: Text(
+                      'Login',
+                      style: Styles.styleBold24(context),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 425,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomTextFormField(
+                      controller: BlocProvider.of<AuthCubitCubit>(context)
+                          .registerNameController,
+                      hintText: 'Name...',
+                      keyboardType: TextInputType.name,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 360,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomPhoneField(
+                      controller: BlocProvider.of<AuthCubitCubit>(context)
+                          .registerPhoneController,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 295,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomTextFormField(
+                      controller: BlocProvider.of<AuthCubitCubit>(context)
+                          .registerExperienceController,
+                      hintText: 'Years of experience...',
+                      keyboardType: TextInputType.number,
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 230,
+                    left: 24.5,
+                    right: 24.5,
+                    child: ExperienceLevelDropdown(),
+                  ),
+                  Positioned(
+                    bottom: 165,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomTextFormField(
+                        controller: BlocProvider.of<AuthCubitCubit>(context)
+                            .registerAddressController,
+                        hintText: 'Address...'),
+                  ),
+                  Positioned(
+                    bottom: 100,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomTextFormField(
+                      controller: BlocProvider.of<AuthCubitCubit>(context)
+                          .registerPasswordController,
+                      hintText: 'Password...',
+                      suffixIcon: const Icon(
+                        Icons.remove_red_eye_outlined,
+                        color: Color(0xffBABABA),
+                        size: 22,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 30,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomButton(
+                      text: 'Sign up',
+                      hasIcon: false,
+                      onPressed: () {
+                        BlocProvider.of<AuthCubitCubit>(context).registerUser();
+                      },
+                      style: Styles.styleBold16(context)
+                          .copyWith(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+              const AlreadyHaveAccount()
+            ],
+          ),
         ),
       ),
     );
