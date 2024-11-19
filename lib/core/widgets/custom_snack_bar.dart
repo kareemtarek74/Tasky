@@ -7,7 +7,7 @@ class CustomSnackbar {
     String? actionLabel,
     VoidCallback? onAction,
   }) {
-    ScaffoldMessenger.of(context).clearSnackBars(); // Clear existing SnackBars
+    ScaffoldMessenger.of(context).clearSnackBars();
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(
