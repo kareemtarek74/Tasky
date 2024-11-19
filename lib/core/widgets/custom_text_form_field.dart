@@ -18,7 +18,7 @@ class CustomTextFormField extends StatelessWidget {
       controller: controller,
       validator: (value) {
         if (value == null || value.isEmpty) {
-          return 'It\'s required';
+          return 'It is required';
         }
         return null;
       },

@@ -18,7 +18,6 @@ class SignUpViewBody extends StatefulWidget {
 
 class _SignUpViewBodyState extends State<SignUpViewBody> {
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,73 +26,82 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
         child: Form(
           key: BlocProvider.of<AuthCubitCubit>(context).registerFormKey,
           autovalidateMode: autovalidateMode,
-          child: Stack(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Background Image
-              Container(
-                height: 380,
-                width: double.infinity,
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                ),
-                child: const Image(
-                  image: AssetImage(Assets.imagesSignUPAvatar),
-                  width: double.infinity,
-                  height: 380,
-                  fit: BoxFit.cover,
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(
-                        height: 230), // Give enough space from the top image
-
-                    Text(
+              Stack(
+                children: [
+                  Container(
+                    height: 780,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      color: Colors.white,
+                    ),
+                  ),
+                  const Image(
+                    image: AssetImage(Assets.imagesSignUPAvatar),
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
+                  Positioned(
+                    bottom: 490,
+                    left: 24.5,
+                    child: Text(
                       'Login',
                       style: Styles.styleBold24(context),
                     ),
-                    const SizedBox(height: 24),
-                    CustomTextFormField(
+                  ),
+                  Positioned(
+                    bottom: 425,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomTextFormField(
                       controller: BlocProvider.of<AuthCubitCubit>(context)
                           .registerNameController,
                       hintText: 'Name...',
                       keyboardType: TextInputType.name,
                     ),
-                    const SizedBox(height: 16),
-
-                    CustomPhoneField(
+                  ),
+                  Positioned(
+                    bottom: 360,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomPhoneField(
                       controller: BlocProvider.of<AuthCubitCubit>(context)
                           .registerPhoneController,
                     ),
-                    const SizedBox(height: 16),
-
-                    // Experience Field
-                    CustomTextFormField(
+                  ),
+                  Positioned(
+                    bottom: 295,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomTextFormField(
                       controller: BlocProvider.of<AuthCubitCubit>(context)
                           .registerExperienceController,
                       hintText: 'Years of experience...',
                       keyboardType: TextInputType.number,
                     ),
-                    const SizedBox(height: 16),
-
-                    // Experience Level Dropdown
-                    ExperienceLevelDropdown(),
-                    const SizedBox(height: 16),
-
-                    // Address Field
-                    CustomTextFormField(
-                      controller: BlocProvider.of<AuthCubitCubit>(context)
-                          .registerAddressController,
-                      hintText: 'Address...',
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Password Field
-                    CustomTextFormField(
+                  ),
+                  Positioned(
+                    bottom: 230,
+                    left: 24.5,
+                    right: 24.5,
+                    child: ExperienceLevelDropdown(),
+                  ),
+                  Positioned(
+                    bottom: 165,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomTextFormField(
+                        controller: BlocProvider.of<AuthCubitCubit>(context)
+                            .registerAddressController,
+                        hintText: 'Address...'),
+                  ),
+                  Positioned(
+                    bottom: 100,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomTextFormField(
                       controller: BlocProvider.of<AuthCubitCubit>(context)
                           .registerPasswordController,
                       hintText: 'Password...',
@@ -103,10 +111,12 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                         size: 22,
                       ),
                     ),
-                    const SizedBox(height: 24),
-
-                    // Sign Up Button
-                    CustomButton(
+                  ),
+                  Positioned(
+                    bottom: 30,
+                    left: 24.5,
+                    right: 24.5,
+                    child: CustomButton(
                       text: 'Sign up',
                       hasIcon: false,
                       onPressed: () {
@@ -125,13 +135,10 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                       style: Styles.styleBold16(context)
                           .copyWith(color: Colors.white),
                     ),
-                    const SizedBox(height: 24), // Space below the button
-
-                    // Already have an account
-                    const AlreadyHaveAccount(),
-                  ],
-                ),
+                  ),
+                ],
               ),
+              const AlreadyHaveAccount()
             ],
           ),
         ),

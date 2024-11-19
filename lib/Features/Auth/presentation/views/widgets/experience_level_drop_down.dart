@@ -42,12 +42,15 @@ class ExperienceLevelDropdown extends StatelessWidget {
           }).toList(),
           onChanged: (String? newValue) {
             if (newValue != null) {
-              // Call the cubit to update the state
               context.read<AuthCubitCubit>().selectExperienceLevel(newValue);
             }
           },
-          validator: (value) =>
-              value == null ? 'Please choose an experience level' : null,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'It is required';
+            }
+            return null;
+          },
         );
       },
     );
