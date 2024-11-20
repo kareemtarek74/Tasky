@@ -26,11 +26,17 @@ class _CustomPasswordFieldState extends State<CustomPasswordField> {
             obscureText = !obscureText;
           });
         },
-        child: const Icon(
-          Icons.remove_red_eye_outlined,
-          color: Color(0xffBABABA),
-          size: 22,
-        ),
+        child: obscureText
+            ? const Icon(
+                Icons.remove_red_eye_outlined,
+                color: Color(0xffBABABA),
+                size: 22,
+              )
+            : const Icon(
+                Icons.visibility_off_outlined,
+                color: Color(0xffBABABA),
+                size: 22,
+              ),
       ),
     );
   }
