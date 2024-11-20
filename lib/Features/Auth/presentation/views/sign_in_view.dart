@@ -5,7 +5,8 @@ import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_state.dart';
 import 'package:tasky/Features/Auth/presentation/views/widgets/sign_in_view_body.dart';
 import 'package:tasky/core/widgets/custom_progress_indicator.dart';
-import 'package:tasky/core/widgets/custom_snack_bar.dart';
+import 'package:tasky/core/widgets/custom_error%20_snack_bar.dart';
+import 'package:tasky/core/widgets/custom_success_snack_bar.dart';
 
 class SignInView extends StatelessWidget {
   const SignInView({super.key});
@@ -15,7 +16,14 @@ class SignInView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocConsumer<AuthCubitCubit, AuthCubitState>(
       listener: (context, state) {
-        if (state is LoginSuccessState) {}
+        if (state is LoginSuccessState) {
+          CustomSuccessSnackbar.showSuccess(
+            context: context,
+            message: "Succeded",
+            actionLabel: "Undo",
+            onAction: () {},
+          );
+        }
         if (state is LoginErrorState) {
           CustomSnackbar.showError(
             context: context,
