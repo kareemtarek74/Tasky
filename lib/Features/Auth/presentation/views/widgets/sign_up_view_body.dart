@@ -50,8 +50,7 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    const SizedBox(
-                        height: 230), // Give enough space from the top image
+                    const SizedBox(height: 230),
 
                     Text(
                       'Login',
@@ -72,7 +71,6 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Experience Field
                     CustomTextFormField(
                       controller: BlocProvider.of<AuthCubitCubit>(context)
                           .registerExperienceController,
@@ -81,11 +79,9 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Experience Level Dropdown
                     ExperienceLevelDropdown(),
                     const SizedBox(height: 16),
 
-                    // Address Field
                     CustomTextFormField(
                       controller: BlocProvider.of<AuthCubitCubit>(context)
                           .registerAddressController,
@@ -93,14 +89,12 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Password Field
                     CustomPasswordField(
                       controller: BlocProvider.of<AuthCubitCubit>(context)
                           .registerPasswordController,
                     ),
                     const SizedBox(height: 24),
 
-                    // Sign Up Button
                     CustomButton(
                       text: 'Sign up',
                       hasIcon: false,
@@ -122,7 +116,6 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                     ),
                     const SizedBox(height: 24), // Space below the button
 
-                    // Already have an account
                     const AlreadyHaveAccount(),
                   ],
                 ),

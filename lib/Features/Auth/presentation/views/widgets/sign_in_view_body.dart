@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
-import 'package:tasky/Features/Auth/presentation/view_model/auth_state.dart';
 import 'package:tasky/Features/Auth/presentation/views/widgets/dont_have_account.dart';
 import 'package:tasky/core/text_styles.dart';
 import 'package:tasky/core/utils/app_images.dart';
@@ -84,21 +83,6 @@ class _SignInViewBodyState extends State<SignInViewBody> {
                             setState(() {
                               autovalidateMode = AutovalidateMode.always;
                             });
-                          }
-                          final cubit = context.read<AuthCubitCubit>();
-                          final state = cubit.state;
-                          if (state is PhoneValid) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                  content:
-                                      Text('Welcome ${state.phoneNumber}')),
-                            );
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text(
-                                      'Please enter a right phone number.')),
-                            );
                           }
                         },
                         text: 'Sign In',

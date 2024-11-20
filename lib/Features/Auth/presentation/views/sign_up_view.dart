@@ -4,6 +4,7 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_state.dart';
 import 'package:tasky/Features/Auth/presentation/views/widgets/sign_up_view_body.dart';
+import 'package:tasky/core/widgets/custom_progress_indicator.dart';
 import 'package:tasky/core/widgets/custom_snack_bar.dart';
 
 class SignUpView extends StatelessWidget {
@@ -27,6 +28,7 @@ class SignUpView extends StatelessWidget {
       builder: (context, state) {
         return ModalProgressHUD(
             inAsyncCall: state is RegisterLoadingState ? true : false,
+            progressIndicator: const CustomProgressIndicator(),
             child: const SignUpViewBody());
       },
     );
