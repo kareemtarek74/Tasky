@@ -7,11 +7,13 @@ class CustomTextFormField extends StatelessWidget {
       this.keyboardType,
       required this.hintText,
       this.suffixIcon,
-      this.controller});
+      this.controller,
+      this.obscureText = false});
   final TextInputType? keyboardType;
   final String hintText;
   final Widget? suffixIcon;
   final TextEditingController? controller;
+  final bool obscureText;
   @override
   Widget build(BuildContext context) {
     return TextFormField(
@@ -23,6 +25,7 @@ class CustomTextFormField extends StatelessWidget {
         return null;
       },
       keyboardType: keyboardType,
+      obscureText: obscureText,
       decoration: InputDecoration(
           fillColor: Colors.white,
           filled: true,

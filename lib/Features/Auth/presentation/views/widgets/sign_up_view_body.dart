@@ -6,6 +6,7 @@ import 'package:tasky/Features/Auth/presentation/views/widgets/experience_level_
 import 'package:tasky/core/text_styles.dart';
 import 'package:tasky/core/utils/app_images.dart';
 import 'package:tasky/core/widgets/custom_button.dart';
+import 'package:tasky/core/widgets/custom_password_field.dart';
 import 'package:tasky/core/widgets/custom_phone_field.dart';
 import 'package:tasky/core/widgets/custom_text_form_field.dart';
 
@@ -93,15 +94,9 @@ class _SignUpViewBodyState extends State<SignUpViewBody> {
                     const SizedBox(height: 16),
 
                     // Password Field
-                    CustomTextFormField(
+                    CustomPasswordField(
                       controller: BlocProvider.of<AuthCubitCubit>(context)
                           .registerPasswordController,
-                      hintText: 'Password...',
-                      suffixIcon: const Icon(
-                        Icons.remove_red_eye_outlined,
-                        color: Color(0xffBABABA),
-                        size: 22,
-                      ),
                     ),
                     const SizedBox(height: 24),
 
