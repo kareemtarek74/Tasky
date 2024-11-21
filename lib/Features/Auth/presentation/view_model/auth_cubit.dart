@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:tasky/Features/Auth/Domain/repos/login_repo.dart';
+import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
 
 import 'auth_state.dart';
@@ -10,8 +11,12 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
   int maxPhoneLength = 15;
   final RegisterRepo registerRepo;
   final LoginRepo loginRepo;
+  final RefreshTokenRepo refreshTokenRepo;
 
-  AuthCubitCubit({required this.loginRepo, required this.registerRepo})
+  AuthCubitCubit(
+      {required this.refreshTokenRepo,
+      required this.loginRepo,
+      required this.registerRepo})
       : super(const AuthCubitInitial());
 
   final registerFormKey = GlobalKey<FormState>();
@@ -75,5 +80,16 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
     }, (loginentity) {
       emit(LoginSuccessState(loginEntity: loginentity));
     });
+  }
+
+  Future<void> refreshToken() async {
+    final refreshResult = await refreshTokenRepo.refreshToken();
+
+    refreshResult.fold(
+      (error) {
+        emit(RefreshTokenErrorState(error));
+      },
+      (refreshTokenEntity) {},
+    );
   }
 }

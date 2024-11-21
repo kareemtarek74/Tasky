@@ -19,4 +19,5 @@ class ApiKeys {
   static String password = "password";
   static String accessToken = "access_token";
   static String refreshToken = "refresh_token";
+  static String token = "token";
 }

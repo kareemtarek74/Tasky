@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:tasky/core/utils/app_colors.dart';
 
 class CustomProgressIndicator extends StatelessWidget {
   const CustomProgressIndicator({super.key});
@@ -20,9 +21,9 @@ class CustomProgressIndicator extends StatelessWidget {
           ),
         ],
       ),
-      child: Center(
+      child: const Center(
         child: SpinKitCircle(
-          color: Theme.of(context).primaryColor,
+          color: AppColors.primaryColor,
           size: 50.0,
         ),
       ),

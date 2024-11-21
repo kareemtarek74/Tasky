@@ -34,10 +34,11 @@ void handleDioExceptions(DioException e) {
               errorModel: ErrorModel.fromJson(e.response!.data));
         case 401:
           throw ServerException(
-              errorModel: ErrorModel.fromJson(e.response!.data));
+              errorModel: ErrorModel.fromJson(
+                  {"message": "Not authorized need to refresh "}));
         case 403:
           throw ServerException(
-              errorModel: ErrorModel.fromJson(e.response!.data));
+              errorModel: ErrorModel.fromJson({"message": "Refresh Faild"}));
         case 422:
           throw ServerException(
               errorModel: ErrorModel.fromJson(e.response!.data));

@@ -19,9 +19,7 @@ class SignInView extends StatelessWidget {
         if (state is LoginSuccessState) {
           CustomSuccessSnackbar.showSuccess(
             context: context,
-            message: "Succeded",
-            actionLabel: "Undo",
-            onAction: () {},
+            message: "You’re now logged in. Enjoy your session!",
           );
         }
         if (state is LoginErrorState) {

@@ -1,24 +1,40 @@
 import 'package:dio/dio.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasky/core/Api/api_consumer.dart';
 import 'package:tasky/core/Api/api_interceptors.dart';
 import 'package:tasky/core/Api/end_points.dart';
+import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/core/Errors/exceptions.dart';
 
 class DioConsumer extends ApiConsumer {
   final Dio dio;
 
-  DioConsumer({required this.dio}) {
+  DioConsumer({
+    required this.dio,
+    required RefreshTokenRepo refreshTokenRepo,
+    required SharedPreferences sharedPreferences,
+  }) {
     dio.options.baseUrl = EndPoints.baseUrl;
-    dio.interceptors.add(ApiInterceptors());
-    dio.interceptors.add(LogInterceptor(
-      request: true,
-      requestHeader: true,
-      requestBody: true,
-      responseHeader: true,
-      responseBody: true,
-      error: true,
-    ));
+
+    dio.interceptors.add(
+      ApiInterceptors(
+        refreshTokenRepo: refreshTokenRepo,
+        sharedPreferences: sharedPreferences,
+      ),
+    );
+
+    dio.interceptors.add(
+      LogInterceptor(
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
+      ),
+    );
   }
+
   @override
   Future delete(String path,
       {Object? data, Map<String, dynamic>? queryParameters}) async {

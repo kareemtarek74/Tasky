@@ -18,7 +18,7 @@ class SignUpView extends StatelessWidget {
         if (state is RegisterSuccessState) {
           CustomSuccessSnackbar.showSuccess(
             context: context,
-            message: "Succeded",
+            message: "Welcome! Your account has been successfully created.",
             actionLabel: "Undo",
             onAction: () {},
           );
