@@ -3,12 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_state.dart';
+import 'package:tasky/Features/Auth/presentation/views/sign_in_view.dart';
 import 'package:tasky/Features/Auth/presentation/views/widgets/sign_up_view_body.dart';
 import 'package:tasky/core/widgets/custom_error%20_snack_bar.dart';
 import 'package:tasky/core/widgets/custom_progress_indicator.dart';
 import 'package:tasky/core/widgets/custom_success_snack_bar.dart';
-
-import '../../../Tasks/presentation/view/home_view.dart';
 
 class SignUpView extends StatelessWidget {
   const SignUpView({super.key});
@@ -25,11 +24,7 @@ class SignUpView extends StatelessWidget {
             onAction: () {},
           );
 
-          Navigator.pushNamedAndRemoveUntil(
-            context,
-            HomeView.routeName,
-            (route) => false,
-          );
+          Navigator.pushReplacementNamed(context, SignInView.routeName);
         }
         if (state is RegisterErrorState) {
           CustomSnackbar.showError(
