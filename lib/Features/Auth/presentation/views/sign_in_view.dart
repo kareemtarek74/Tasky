@@ -4,8 +4,9 @@ import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_state.dart';
 import 'package:tasky/Features/Auth/presentation/views/widgets/sign_in_view_body.dart';
-import 'package:tasky/core/widgets/custom_progress_indicator.dart';
+import 'package:tasky/Features/Tasks/presentation/view/home_view.dart';
 import 'package:tasky/core/widgets/custom_error%20_snack_bar.dart';
+import 'package:tasky/core/widgets/custom_progress_indicator.dart';
 import 'package:tasky/core/widgets/custom_success_snack_bar.dart';
 
 class SignInView extends StatelessWidget {
@@ -20,6 +21,11 @@ class SignInView extends StatelessWidget {
           CustomSuccessSnackbar.showSuccess(
             context: context,
             message: "You’re now logged in. Enjoy your session!",
+          );
+          Navigator.pushNamedAndRemoveUntil(
+            context,
+            HomeView.routeName,
+            (route) => false,
           );
         }
         if (state is LoginErrorState) {
