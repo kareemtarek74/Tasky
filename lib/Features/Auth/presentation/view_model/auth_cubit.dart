@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:tasky/Features/Auth/Domain/repos/login_repo.dart';
+import 'package:tasky/Features/Auth/Domain/repos/logout_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
 
@@ -12,9 +13,11 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
   final RegisterRepo registerRepo;
   final LoginRepo loginRepo;
   final RefreshTokenRepo refreshTokenRepo;
+  final LogoutRepo logoutRepo;
 
   AuthCubitCubit(
-      {required this.refreshTokenRepo,
+      {required this.logoutRepo,
+      required this.refreshTokenRepo,
       required this.loginRepo,
       required this.registerRepo})
       : super(const AuthCubitInitial());
@@ -91,5 +94,14 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
       },
       (refreshTokenEntity) {},
     );
+  }
+
+  Future<void> logoutUser() async {
+    final response = await logoutRepo.logoutUser();
+    response.fold((error) {
+      emit(LogoutErrorState(errorMessage: error));
+    }, (logoutSuccess) {
+      emit(LogoutSuccessState(message: logoutSuccess));
+    });
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasky/Features/Auth/Domain/repos/login_repo.dart';
+import 'package:tasky/Features/Auth/Domain/repos/logout_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
 import 'package:tasky/Features/Auth/presentation/views/sign_in_view.dart';
@@ -32,7 +33,8 @@ class TaskyApp extends StatelessWidget {
           create: (context) => AuthCubitCubit(
               refreshTokenRepo: getIt<RefreshTokenRepo>(),
               registerRepo: getIt<RegisterRepo>(),
-              loginRepo: getIt<LoginRepo>()),
+              loginRepo: getIt<LoginRepo>(),
+              logoutRepo: getIt<LogoutRepo>()),
         ),
       ],
       child: MaterialApp(

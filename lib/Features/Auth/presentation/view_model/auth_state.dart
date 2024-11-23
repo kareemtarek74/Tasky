@@ -84,3 +84,15 @@ class RefreshTokenErrorState extends AuthCubitState {
 
   const RefreshTokenErrorState(this.errorMessage);
 }
+
+class LogoutSuccessState extends AuthCubitState {
+  final String message;
+
+  const LogoutSuccessState({required this.message});
+}
+
+class LogoutErrorState extends AuthCubitState {
+  final String errorMessage;
+
+  const LogoutErrorState({required this.errorMessage});
+}

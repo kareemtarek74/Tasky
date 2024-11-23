@@ -32,14 +32,20 @@ class RegisterRepoImpl extends RegisterRepo {
           ApiKeys.level: experienceLevel,
         },
       );
-      await preferences.setString(
-        ApiKeys.accessToken,
-        response[ApiKeys.accessToken],
-      );
-      await preferences.setString(
-        ApiKeys.refreshToken,
-        response[ApiKeys.refreshToken],
-      );
+      if (response.containsKey('message')) {
+        final errorMessage = response['message'] ?? 'Unknown error occurred';
+        return left(errorMessage);
+      }
+
+      final accessToken = response[ApiKeys.accessToken];
+      final refreshToken = response[ApiKeys.refreshToken];
+
+      if (accessToken == null || refreshToken == null) {
+        return left('Invalid registration response: Missing tokens.');
+      }
+
+      await preferences.setString(ApiKeys.accessToken, accessToken);
+      await preferences.setString(ApiKeys.refreshToken, refreshToken);
       return right(RegisterModel.fromJson(response));
     } on ServerException catch (e) {
       return left(e.errorModel.message);

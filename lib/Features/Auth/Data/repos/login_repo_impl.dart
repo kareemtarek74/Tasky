@@ -12,22 +12,37 @@ class LoginRepoImpl extends LoginRepo {
   final SharedPreferences sharedPreferences;
 
   LoginRepoImpl({required this.apiConsumer, required this.sharedPreferences});
+
   @override
-  Future<Either<String, LoginEntity>> loginUser(
-      {String? phone, String? password}) async {
+  Future<Either<String, LoginEntity>> loginUser({
+    String? phone,
+    String? password,
+  }) async {
     try {
       final response = await apiConsumer.post(
         EndPoints.login,
         data: {ApiKeys.phone: phone, ApiKeys.password: password},
       );
 
-      await sharedPreferences.setString(
-          ApiKeys.accessToken, response[ApiKeys.accessToken]);
-      await sharedPreferences.setString(
-          ApiKeys.refreshToken, response[ApiKeys.refreshToken]);
+      if (!response.containsKey(ApiKeys.accessToken) ||
+          !response.containsKey(ApiKeys.refreshToken)) {
+        if (response.containsKey('message')) {
+          return left(response['message']);
+        }
+        return left('Invalid login response: Missing tokens.');
+      }
+
+      final accessToken = response[ApiKeys.accessToken];
+      final refreshToken = response[ApiKeys.refreshToken];
+
+      await sharedPreferences.setString(ApiKeys.accessToken, accessToken);
+      await sharedPreferences.setString(ApiKeys.refreshToken, refreshToken);
+
       return right(LoginModel.fromJson(response));
     } on ServerException catch (e) {
       return left(e.errorModel.message);
+    } catch (e) {
+      return left('Unexpected error occurred during login.');
     }
   }
 }
