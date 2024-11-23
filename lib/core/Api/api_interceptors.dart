@@ -29,7 +29,7 @@ class ApiInterceptors extends Interceptor {
 
     final accessToken = sharedPreferences.getString(ApiKeys.accessToken);
     if (accessToken != null && accessToken.isNotEmpty) {
-      options.headers['Authorization'] = 'bearer $accessToken';
+      options.headers['Authorization'] = 'Bearer $accessToken';
     }
     super.onRequest(options, handler);
   }
@@ -58,7 +58,7 @@ class ApiInterceptors extends Interceptor {
                 ApiKeys.accessToken, newAccessToken);
 
             final originalRequest = err.requestOptions;
-            originalRequest.headers['Authorization'] = 'bearer $newAccessToken';
+            originalRequest.headers['Authorization'] = 'Bearer $newAccessToken';
 
             try {
               final response = await Dio().fetch(originalRequest);

@@ -29,6 +29,7 @@ dependencies:
   internet_connection_checker: ^1.0.0+1
   intl_phone_field: ^3.2.0
   modal_progress_hud_nsn: ^0.5.1
+  motion_toast: ^2.11.0
   qr_flutter:
     git:
       url: https://github.com/theyakka/qr.flutter.git

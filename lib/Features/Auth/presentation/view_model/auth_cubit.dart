@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:tasky/Features/Auth/Domain/repos/login_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/logout_repo.dart';
+import 'package:tasky/Features/Auth/Domain/repos/profile_info_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
 
@@ -14,9 +15,11 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
   final LoginRepo loginRepo;
   final RefreshTokenRepo refreshTokenRepo;
   final LogoutRepo logoutRepo;
+  final ProfileInfoRepo profileInfoRepo;
 
   AuthCubitCubit(
-      {required this.logoutRepo,
+      {required this.profileInfoRepo,
+      required this.logoutRepo,
       required this.refreshTokenRepo,
       required this.loginRepo,
       required this.registerRepo})
@@ -102,6 +105,16 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
       emit(LogoutErrorState(errorMessage: error));
     }, (logoutSuccess) {
       emit(LogoutSuccessState(message: logoutSuccess));
+    });
+  }
+
+  Future<void> getProfile() async {
+    emit(ProfileInfoLoadingState());
+    final response = await profileInfoRepo.getProfileInfo();
+    response.fold((error) {
+      emit(ProfileInfoErrorState(error));
+    }, (profileEntity) {
+      emit(ProfileInfoSuccessState(profileInfoEntity: profileEntity));
     });
   }
 }

@@ -37,6 +37,7 @@ class LoginRepoImpl extends LoginRepo {
 
       await sharedPreferences.setString(ApiKeys.accessToken, accessToken);
       await sharedPreferences.setString(ApiKeys.refreshToken, refreshToken);
+      print(response);
 
       return right(LoginModel.fromJson(response));
     } on ServerException catch (e) {

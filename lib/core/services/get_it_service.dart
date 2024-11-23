@@ -4,10 +4,12 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasky/Features/Auth/Data/repos/login_repo_impl.dart';
 import 'package:tasky/Features/Auth/Data/repos/logout_repo_impl.dart';
+import 'package:tasky/Features/Auth/Data/repos/profile_info_repo_impl.dart';
 import 'package:tasky/Features/Auth/Data/repos/refresh_token_repo_impl.dart';
 import 'package:tasky/Features/Auth/Data/repos/register_repo_impl.dart';
 import 'package:tasky/Features/Auth/Domain/repos/login_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/logout_repo.dart';
+import 'package:tasky/Features/Auth/Domain/repos/profile_info_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
 import 'package:tasky/core/Api/api_interceptors.dart';
@@ -83,6 +85,12 @@ Future<void> setup() async {
     dioConsumer: getIt<DioConsumer>(),
   ));
   setupDioWithInterceptors();
+
+  getIt.registerSingleton<ProfileInfoRepo>(
+    ProfileInfoRepoImpl(
+      apiConsumer: getIt<DioConsumer>(),
+    ),
+  );
 }
 
 void setupDioWithInterceptors() {

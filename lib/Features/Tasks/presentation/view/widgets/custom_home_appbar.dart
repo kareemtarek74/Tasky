@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_state.dart';
+import 'package:tasky/Features/Auth/presentation/views/profile_info_view.dart';
 import 'package:tasky/Features/Auth/presentation/views/sign_in_view.dart';
 import 'package:tasky/core/text_styles.dart';
 import 'package:tasky/core/widgets/custom_error%20_snack_bar.dart';
@@ -42,9 +43,15 @@ class CustomHomeAppBar extends StatelessWidget {
             ),
           ),
           const Spacer(),
-          const Icon(
-            FontAwesomeIcons.circleUser,
-            size: 24,
+          GestureDetector(
+            onTap: () {
+              BlocProvider.of<AuthCubitCubit>(context).getProfile();
+              Navigator.pushNamed(context, ProfileInfoView.routeName);
+            },
+            child: const Icon(
+              FontAwesomeIcons.circleUser,
+              size: 24,
+            ),
           ),
           const SizedBox(
             width: 20,
