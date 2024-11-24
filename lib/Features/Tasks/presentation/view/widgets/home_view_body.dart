@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tasky/Features/Tasks/presentation/view/widgets/custom_home_appbar.dart';
+import 'package:tasky/Features/Tasks/presentation/view/widgets/custom_home_body.dart';
 
 class HomeViewBody extends StatelessWidget {
   const HomeViewBody({super.key});
@@ -11,9 +12,10 @@ class HomeViewBody extends StatelessWidget {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 22),
+              padding: EdgeInsets.only(left: 22, right: 16),
               child: CustomHomeAppBar(),
-            )
+            ),
+            CustomHomeBody(),
           ],
         ),
       ),

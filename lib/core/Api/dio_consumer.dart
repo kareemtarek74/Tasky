@@ -1,28 +1,20 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasky/core/Api/api_consumer.dart';
 import 'package:tasky/core/Api/api_interceptors.dart';
 import 'package:tasky/core/Api/end_points.dart';
-import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/core/Errors/exceptions.dart';
+import 'package:tasky/core/services/get_it_service.dart';
 
 class DioConsumer extends ApiConsumer {
   final Dio dio;
 
   DioConsumer({
     required this.dio,
-    required RefreshTokenRepo refreshTokenRepo,
-    required SharedPreferences sharedPreferences,
   }) {
     dio.options.baseUrl = EndPoints.baseUrl;
 
-    dio.interceptors.add(
-      ApiInterceptors(
-        refreshTokenRepo: refreshTokenRepo,
-        sharedPreferences: sharedPreferences,
-      ),
-    );
+    dio.interceptors.add(getIt<ApiInterceptors>());
     if (kDebugMode) {
       dio.interceptors.add(
         LogInterceptor(

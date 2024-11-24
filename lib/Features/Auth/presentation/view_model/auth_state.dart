@@ -80,6 +80,10 @@ class LoginErrorState extends AuthCubitState {
   const LoginErrorState(this.errorMessage);
 }
 
+class RefreshTokenLoadingState extends AuthCubitState {}
+
+class RefreshTokenSuccessState extends AuthCubitState {}
+
 class RefreshTokenErrorState extends AuthCubitState {
   final String errorMessage;
 

@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tasky/Features/Auth/Domain/repos/login_repo.dart';
-import 'package:tasky/Features/Auth/Domain/repos/logout_repo.dart';
-import 'package:tasky/Features/Auth/Domain/repos/profile_info_repo.dart';
-import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
 import 'package:tasky/Features/Auth/presentation/views/sign_in_view.dart';
 import 'package:tasky/Features/intro/presentation/views/intro_view.dart';
@@ -13,12 +9,10 @@ import 'package:tasky/core/services/get_it_service.dart';
 import 'package:tasky/core/services/shared_preferences_singleton.dart';
 import 'package:tasky/core/utils/app_colors.dart';
 
-import 'Features/Auth/Domain/repos/register_repo.dart';
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Prefs.init();
   await setup();
+  await Prefs.init();
 
   runApp(const TaskyApp());
 }
@@ -31,13 +25,7 @@ class TaskyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => AuthCubitCubit(
-            refreshTokenRepo: getIt<RefreshTokenRepo>(),
-            registerRepo: getIt<RegisterRepo>(),
-            loginRepo: getIt<LoginRepo>(),
-            logoutRepo: getIt<LogoutRepo>(),
-            profileInfoRepo: getIt<ProfileInfoRepo>(),
-          ),
+          create: (context) => getIt<AuthCubitCubit>(),
         ),
       ],
       child: MaterialApp(

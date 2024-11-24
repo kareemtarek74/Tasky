@@ -1,32 +1,23 @@
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
+import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
 import 'package:tasky/core/Api/end_points.dart';
+import 'package:tasky/core/services/get_it_service.dart';
 
 class ApiInterceptors extends Interceptor {
-  final RefreshTokenRepo refreshTokenRepo;
   final SharedPreferences sharedPreferences;
   bool isRefreshing = false;
   List<RequestOptions> requestQueue = [];
+  final Dio dio;
 
   ApiInterceptors({
-    required this.refreshTokenRepo,
+    required this.dio,
     required this.sharedPreferences,
   });
 
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    final noAuthRequiredPaths = [
-      EndPoints.login,
-      EndPoints.register,
-    ];
-
-    if (noAuthRequiredPaths.contains(options.path)) {
-      super.onRequest(options, handler);
-      return;
-    }
-
     final accessToken = sharedPreferences.getString(ApiKeys.accessToken);
     if (accessToken != null && accessToken.isNotEmpty) {
       options.headers['Authorization'] = 'Bearer $accessToken';
@@ -37,42 +28,22 @@ class ApiInterceptors extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
-      final isLoggedOut =
-          sharedPreferences.getString(ApiKeys.accessToken) == null;
+      final cubit = getIt<AuthCubitCubit>(); // استخدام cubit لتحديث التوكن
+      await cubit.refreshToken();
 
-      if (isLoggedOut) {
-        handler.next(err);
-        return;
+      final newAccessToken = sharedPreferences.getString(ApiKeys.accessToken);
+      if (newAccessToken != null && newAccessToken.isNotEmpty) {
+        err.requestOptions.headers['Authorization'] = 'Bearer $newAccessToken';
+        final retryResponse = await dio.request(
+          err.requestOptions.path,
+          options: Options(
+            method: err.requestOptions.method,
+            headers: err.requestOptions.headers,
+          ),
+        );
+        return handler.resolve(retryResponse);
       }
-
-      final refreshResult = await refreshTokenRepo.refreshToken();
-
-      refreshResult.fold(
-        (error) {
-          handler.reject(err);
-        },
-        (refreshTokenEntity) async {
-          final newAccessToken = refreshTokenEntity.accesstoken;
-          if (newAccessToken != null && newAccessToken.isNotEmpty) {
-            await sharedPreferences.setString(
-                ApiKeys.accessToken, newAccessToken);
-
-            final originalRequest = err.requestOptions;
-            originalRequest.headers['Authorization'] = 'Bearer $newAccessToken';
-
-            try {
-              final response = await Dio().fetch(originalRequest);
-              handler.resolve(response);
-            } on DioException catch (fetchError) {
-              handler.reject(fetchError);
-            }
-          } else {
-            handler.reject(err);
-          }
-        },
-      );
-    } else {
-      super.onError(err, handler);
     }
+    return super.onError(err, handler);
   }
 }

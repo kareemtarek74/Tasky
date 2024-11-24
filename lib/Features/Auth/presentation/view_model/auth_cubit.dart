@@ -1,10 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tasky/Features/Auth/Domain/repos/login_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/logout_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/profile_info_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
+import 'package:tasky/core/Api/end_points.dart';
 
 import 'auth_state.dart';
 
@@ -16,9 +18,11 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
   final RefreshTokenRepo refreshTokenRepo;
   final LogoutRepo logoutRepo;
   final ProfileInfoRepo profileInfoRepo;
+  final SharedPreferences sharedPreferences;
 
   AuthCubitCubit(
-      {required this.profileInfoRepo,
+      {required this.sharedPreferences,
+      required this.profileInfoRepo,
       required this.logoutRepo,
       required this.refreshTokenRepo,
       required this.loginRepo,
@@ -89,14 +93,28 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
   }
 
   Future<void> refreshToken() async {
-    final refreshResult = await refreshTokenRepo.refreshToken();
+    try {
+      emit(RefreshTokenLoadingState());
 
-    refreshResult.fold(
-      (error) {
-        emit(RefreshTokenErrorState(error));
-      },
-      (refreshTokenEntity) {},
-    );
+      // تنفيذ طلب التحديث للتوكن
+      final refreshResult = await refreshTokenRepo.refreshToken();
+
+      refreshResult.fold(
+        (error) {
+          emit(RefreshTokenErrorState(error));
+        },
+        (refreshTokenEntity) {
+          // تخزين التوكن الجديد في SharedPreferences
+          final newAccessToken = refreshTokenEntity.accesstoken.toString();
+          sharedPreferences.setString(ApiKeys.accessToken, newAccessToken);
+
+          // بعد التحديث بنجاح
+          emit(RefreshTokenSuccessState());
+        },
+      );
+    } catch (e) {
+      emit(RefreshTokenErrorState(e.toString()));
+    }
   }
 
   Future<void> logoutUser() async {

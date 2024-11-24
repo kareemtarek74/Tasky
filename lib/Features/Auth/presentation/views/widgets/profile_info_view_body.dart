@@ -49,23 +49,23 @@ class ProfileInfoViewBody extends StatelessWidget {
                           ? ProfileInfoListView(
                               user: [
                                 ProfileInfoModel(
-                                    title: 'Name',
+                                    title: 'NAME',
                                     subTitle:
                                         state.profileInfoEntity.name ?? ''),
                                 ProfileInfoModel(
-                                    title: 'Phone',
+                                    title: 'PHONE',
                                     subTitle:
                                         state.profileInfoEntity.phone ?? ''),
                                 ProfileInfoModel(
-                                    title: 'Level',
+                                    title: 'LEVEL',
                                     subTitle:
                                         state.profileInfoEntity.leveL ?? ''),
                                 ProfileInfoModel(
-                                    title: 'Years of experience',
+                                    title: 'YEARS OF EXPERIENCE',
                                     subTitle: state.profileInfoEntity.experience
                                         .toString()),
                                 ProfileInfoModel(
-                                    title: 'Location',
+                                    title: 'LOCATION',
                                     subTitle:
                                         state.profileInfoEntity.location ?? ''),
                               ],

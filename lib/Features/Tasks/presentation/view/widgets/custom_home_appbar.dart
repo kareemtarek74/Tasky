@@ -7,6 +7,7 @@ import 'package:tasky/Features/Auth/presentation/views/profile_info_view.dart';
 import 'package:tasky/Features/Auth/presentation/views/sign_in_view.dart';
 import 'package:tasky/core/text_styles.dart';
 import 'package:tasky/core/widgets/custom_error%20_snack_bar.dart';
+import 'package:tasky/core/widgets/custom_logout_button.dart';
 import 'package:tasky/core/widgets/custom_success_snack_bar.dart';
 
 class CustomHomeAppBar extends StatelessWidget {
@@ -56,16 +57,7 @@ class CustomHomeAppBar extends StatelessWidget {
           const SizedBox(
             width: 20,
           ),
-          GestureDetector(
-            onTap: () {
-              BlocProvider.of<AuthCubitCubit>(context).logoutUser();
-            },
-            child: const Icon(
-              Icons.logout,
-              size: 24,
-              color: Color(0xff5F33E1),
-            ),
-          )
+          const LogoutButton()
         ],
       ),
     );
