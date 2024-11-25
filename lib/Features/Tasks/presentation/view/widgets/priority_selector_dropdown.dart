@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
 
 class PriorityDropdown extends StatelessWidget {
@@ -10,7 +11,7 @@ class PriorityDropdown extends StatelessWidget {
     final List<String> priorities = [
       "Low Priority",
       "Medium Priority",
-      "High Priority"
+      "High Priority",
     ];
 
     return BlocBuilder<TaskCubit, TaskState>(
@@ -26,35 +27,38 @@ class PriorityDropdown extends StatelessWidget {
         }
 
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 6),
           decoration: BoxDecoration(
             color: fieldColor,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(10),
           ),
           child: DropdownButton<String>(
+            padding: EdgeInsets.zero,
             value: selectedPriority,
             isExpanded: true,
             underline: const SizedBox(),
             icon: Icon(
-              Icons.arrow_drop_down,
+              FontAwesomeIcons.caretDown,
               color: flagColor,
+              size: 24,
             ),
             items: priorities.map((String priority) {
               return DropdownMenuItem<String>(
                 value: priority,
                 child: Row(
                   children: [
+                    const SizedBox(width: 16),
                     Icon(
-                      Icons.flag,
+                      FontAwesomeIcons.flag,
                       color: context.read<TaskCubit>().flagColors[priority]!,
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 10),
                     Text(
                       priority,
                       style: TextStyle(
                         fontSize: 16,
                         color: context.read<TaskCubit>().flagColors[priority]!,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ],
@@ -62,7 +66,9 @@ class PriorityDropdown extends StatelessWidget {
               );
             }).toList(),
             onChanged: (String? newValue) {
-              context.read<TaskCubit>().updatePriority(newValue!);
+              if (newValue != null) {
+                context.read<TaskCubit>().updatePriority(newValue);
+              }
             },
           ),
         );

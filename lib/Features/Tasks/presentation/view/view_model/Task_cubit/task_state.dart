@@ -9,7 +9,7 @@ sealed class TaskState extends Equatable {
 
 final class TaskInitial extends TaskState {}
 
-final class TaskPriorityUpdated extends TaskState {
+class TaskPriorityUpdated extends TaskState {
   final String selectedPriority;
   final Color flagColor;
   final Color fieldColor;

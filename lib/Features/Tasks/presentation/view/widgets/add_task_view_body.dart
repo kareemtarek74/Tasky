@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tasky/Features/Tasks/presentation/view/widgets/add_image_dotted_button.dart';
 import 'package:tasky/Features/Tasks/presentation/view/widgets/priority_selector_dropdown.dart';
+import 'package:tasky/core/text_styles.dart';
 import 'package:tasky/core/widgets/custom_app_bar.dart';
 
 import 'custom_task_text_field.dart';
@@ -10,38 +11,47 @@ class AddTaskViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              CustomAppBar(title: 'Add new task'),
-              SizedBox(
+              const CustomAppBar(title: 'Add new task'),
+              const SizedBox(
                 height: 24,
               ),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 22),
+                padding: const EdgeInsets.symmetric(horizontal: 22),
                 child: Column(
                   children: [
-                    AddImageButton(),
-                    SizedBox(
+                    const AddImageButton(),
+                    const SizedBox(
                       height: 16,
                     ),
-                    CustomTaskTextField(
+                    const CustomTaskTextField(
                         label: 'Task title', hintText: 'Enter title here...'),
-                    SizedBox(
+                    const SizedBox(
                       height: 16,
                     ),
-                    CustomTaskTextField(
+                    const CustomTaskTextField(
                       label: 'Task Description',
                       hintText: 'Enter description here...',
                       maxLines: 7,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 16,
                     ),
-                    PriorityDropdown()
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('Priority',
+                            style: Styles.styleRegular12(context)
+                                .copyWith(color: const Color(0xff6E6A7C))),
+                        const SizedBox(height: 8),
+                        const PriorityDropdown(),
+                      ],
+                    )
                   ],
                 ),
               ),
