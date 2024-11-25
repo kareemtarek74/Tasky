@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tasky/Features/Tasks/presentation/view/widgets/custom_floating_action_buttons.dart';
 import 'package:tasky/Features/Tasks/presentation/view/widgets/custom_home_appbar.dart';
 import 'package:tasky/Features/Tasks/presentation/view/widgets/custom_home_body.dart';
 
@@ -8,6 +9,7 @@ class HomeViewBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
@@ -16,6 +18,11 @@ class HomeViewBody extends StatelessWidget {
               child: CustomHomeAppBar(),
             ),
             CustomHomeBody(),
+            Spacer(),
+            CustomFloatingButtons(),
+            SizedBox(
+              height: 32,
+            ),
           ],
         ),
       ),

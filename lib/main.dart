@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
 import 'package:tasky/Features/Auth/presentation/views/sign_in_view.dart';
+import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
 import 'package:tasky/Features/intro/presentation/views/intro_view.dart';
 import 'package:tasky/constants.dart';
 import 'package:tasky/core/helper_functions/onGenerate_function.dart';
@@ -27,6 +28,9 @@ class TaskyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => getIt<AuthCubitCubit>(),
         ),
+        BlocProvider(
+          create: (context) => getIt<TaskCubit>(),
+        )
       ],
       child: MaterialApp(
         theme: ThemeData(

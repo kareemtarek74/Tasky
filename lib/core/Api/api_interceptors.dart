@@ -28,7 +28,7 @@ class ApiInterceptors extends Interceptor {
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
-      final cubit = getIt<AuthCubitCubit>(); // استخدام cubit لتحديث التوكن
+      final cubit = getIt<AuthCubitCubit>();
       await cubit.refreshToken();
 
       final newAccessToken = sharedPreferences.getString(ApiKeys.accessToken);

@@ -96,7 +96,6 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
     try {
       emit(RefreshTokenLoadingState());
 
-      // تنفيذ طلب التحديث للتوكن
       final refreshResult = await refreshTokenRepo.refreshToken();
 
       refreshResult.fold(
@@ -104,11 +103,9 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
           emit(RefreshTokenErrorState(error));
         },
         (refreshTokenEntity) {
-          // تخزين التوكن الجديد في SharedPreferences
           final newAccessToken = refreshTokenEntity.accesstoken.toString();
           sharedPreferences.setString(ApiKeys.accessToken, newAccessToken);
 
-          // بعد التحديث بنجاح
           emit(RefreshTokenSuccessState());
         },
       );

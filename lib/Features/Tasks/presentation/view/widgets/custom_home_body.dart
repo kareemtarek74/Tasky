@@ -29,7 +29,10 @@ class CustomHomeBody extends StatelessWidget {
         const SizedBox(
           height: 16,
         ),
-        const MyTasksListView()
+        const FittedBox(fit: BoxFit.scaleDown, child: MyTasksListView()),
+        const SizedBox(
+          height: 16,
+        ),
       ],
     );
   }

@@ -12,6 +12,7 @@ import 'package:tasky/Features/Auth/Domain/repos/profile_info_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
+import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
 import 'package:tasky/core/Api/api_consumer.dart';
 import 'package:tasky/core/Api/api_interceptors.dart';
 import 'package:tasky/core/Api/dio_consumer.dart';
@@ -75,5 +76,9 @@ Future<void> setup() async {
         refreshTokenRepo: getIt(),
         registerRepo: getIt(),
         sharedPreferences: getIt()),
+  );
+
+  getIt.registerFactory<TaskCubit>(
+    () => TaskCubit(),
   );
 }
