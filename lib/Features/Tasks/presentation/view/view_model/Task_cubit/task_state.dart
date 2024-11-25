@@ -32,3 +32,9 @@ class TaskDueDateUpdated extends TaskState {
   @override
   List<Object> get props => [dueDate];
 }
+
+class TaskImageUpdated extends TaskState {
+  final String? imagePath;
+
+  const TaskImageUpdated({required this.imagePath});
+}

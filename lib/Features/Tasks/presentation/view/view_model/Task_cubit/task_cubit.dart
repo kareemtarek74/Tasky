@@ -10,8 +10,8 @@ class TaskCubit extends Cubit<TaskState> {
   }
 
   String? prioritySelected;
+  String? imagePath;
 
-  // Define colors for flags and fields
   final Map<String, Color> flagColors = {
     "Low Priority": const Color(0xFF0087FF),
     "Medium Priority": const Color(0xFF5F33E1),
@@ -50,8 +50,14 @@ class TaskCubit extends Cubit<TaskState> {
   }
 
   TextEditingController dueDateController = TextEditingController();
+
   void updateDueDate(String dueDate) {
     dueDateController.text = dueDate;
     emit(TaskDueDateUpdated(dueDate: dueDate));
+  }
+
+  void saveImagePath(String? path) {
+    imagePath = path;
+    emit(TaskImageUpdated(imagePath: path));
   }
 }
