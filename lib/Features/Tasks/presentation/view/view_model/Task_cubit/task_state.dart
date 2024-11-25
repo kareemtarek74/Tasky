@@ -23,3 +23,12 @@ class TaskPriorityUpdated extends TaskState {
   @override
   List<Object> get props => [selectedPriority, flagColor, fieldColor];
 }
+
+class TaskDueDateUpdated extends TaskState {
+  final String dueDate;
+
+  const TaskDueDateUpdated({required this.dueDate});
+
+  @override
+  List<Object> get props => [dueDate];
+}

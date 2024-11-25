@@ -27,7 +27,7 @@ class PriorityDropdown extends StatelessWidget {
         }
 
         return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 6),
+          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 4),
           decoration: BoxDecoration(
             color: fieldColor,
             borderRadius: BorderRadius.circular(10),

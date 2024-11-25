@@ -48,4 +48,10 @@ class TaskCubit extends Cubit<TaskState> {
       ),
     );
   }
+
+  TextEditingController dueDateController = TextEditingController();
+  void updateDueDate(String dueDate) {
+    dueDateController.text = dueDate;
+    emit(TaskDueDateUpdated(dueDate: dueDate));
+  }
 }
