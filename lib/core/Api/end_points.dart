@@ -6,6 +6,7 @@ class EndPoints {
   static String getProfile = '$baseUrl/auth/profile';
   static String refreshToken = '$baseUrl/auth/refresh-token';
   static String uploadImage = '$baseUrl/upload/image';
+  static String createTask = '$baseUrl/todos';
 }
 
 class ApiKeys {
@@ -22,4 +23,8 @@ class ApiKeys {
   static String refreshToken = "refresh_token";
   static String token = "token";
   static String image = "image";
+  static String title = "title";
+  static String description = "desc";
+  static String priority = "priority";
+  static String date = "dueDate";
 }

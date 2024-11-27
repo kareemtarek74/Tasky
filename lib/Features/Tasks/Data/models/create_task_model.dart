@@ -1,4 +1,6 @@
-class CreateTaskModel {
+import 'package:tasky/Features/Tasks/Domain/Entities/create_task_entity.dart';
+
+class CreateTaskModel extends CreateTaskEntity {
   String? image;
   String? title;
   String? desc;
@@ -8,7 +10,7 @@ class CreateTaskModel {
   String? id;
   DateTime? createdAt;
   DateTime? updatedAt;
-  int? v;
+  num? v;
 
   CreateTaskModel({
     this.image,
@@ -21,7 +23,17 @@ class CreateTaskModel {
     this.createdAt,
     this.updatedAt,
     this.v,
-  });
+  }) : super(
+            imge: image,
+            tiTle: title,
+            decription: desc,
+            prior: priority,
+            statue: status,
+            userId: user,
+            taskId: id,
+            createAt: createdAt,
+            updateAt: updatedAt,
+            V: v);
 
   factory CreateTaskModel.fromJson(Map<String, dynamic> json) {
     return CreateTaskModel(
@@ -32,13 +44,11 @@ class CreateTaskModel {
       status: json['status'] as String?,
       user: json['user'] as String?,
       id: json['_id'] as String?,
-      createdAt: json['createdAt'] == null
-          ? null
-          : DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] == null
-          ? null
-          : DateTime.parse(json['updatedAt'] as String),
-      v: json['__v'] as int?,
+      createdAt:
+          json['createdAt'] == null ? null : DateTime.parse(json['createdAt']),
+      updatedAt:
+          json['updatedAt'] == null ? null : DateTime.parse(json['updatedAt']),
+      v: json['__v'] as num?,
     );
   }
 
