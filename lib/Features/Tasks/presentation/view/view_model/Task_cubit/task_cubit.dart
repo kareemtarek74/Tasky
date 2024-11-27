@@ -1,16 +1,21 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:tasky/Features/Tasks/Domain/Repos/upload_image_repo.dart';
 
 part 'task_state.dart';
 
 class TaskCubit extends Cubit<TaskState> {
-  TaskCubit() : super(TaskInitial()) {
+  final UploadImageRepo uploadImageRepo;
+  TaskCubit({required this.uploadImageRepo}) : super(TaskInitial()) {
     prioritySelected = "medium";
   }
+  static TaskCubit get(context) => BlocProvider.of(context);
 
   String? prioritySelected;
-  String? imagePath;
+  XFile? image;
+  String? uploadedImage;
 
   final Map<String, Color> flagColors = {
     "Low Priority": const Color(0xFF0087FF),
@@ -24,7 +29,6 @@ class TaskCubit extends Cubit<TaskState> {
     "High Priority": const Color(0xFFFFEEE8),
   };
 
-  // Mapping of display values to API values and vice versa
   final Map<String, String> displayToApi = {
     "Low Priority": "low",
     "Medium Priority": "medium",
@@ -37,9 +41,8 @@ class TaskCubit extends Cubit<TaskState> {
     "high": "High Priority",
   };
 
-  // Method to update the selected priority
   void updatePriority(String displayValue) {
-    prioritySelected = displayToApi[displayValue]; // Save API value
+    prioritySelected = displayToApi[displayValue];
     emit(
       TaskPriorityUpdated(
         selectedPriority: displayValue,
@@ -56,8 +59,30 @@ class TaskCubit extends Cubit<TaskState> {
     emit(TaskDueDateUpdated(dueDate: dueDate));
   }
 
-  void saveImagePath(String? path) {
-    imagePath = path;
+  void saveImagePath(XFile? path) {
+    image = path;
     emit(TaskImageUpdated(imagePath: path));
+  }
+
+  Future<void> uploadImage() async {
+    emit(UploadImageLoadingState());
+    if (image != null) {
+      final response = await uploadImageRepo.uploadImage(image: image!);
+
+      response.fold(
+        (error) {
+          debugPrint('خطأ أثناء رفع الصورة: $error');
+          emit(UploadImageErrorState(errorMessage: error));
+        },
+        (imageEntity) {
+          uploadedImage = imageEntity.imagePath;
+          debugPrint('تم رفع الصورة بنجاح: $uploadedImage');
+          emit(UploadImageSuccessState());
+        },
+      );
+    } else {
+      emit(const UploadImageErrorState(
+          errorMessage: 'يرجى اختيار صورة قبل رفعها.'));
+    }
   }
 }

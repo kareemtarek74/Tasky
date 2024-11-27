@@ -9,6 +9,8 @@ import 'package:tasky/Features/Tasks/presentation/view/widgets/priority_selector
 import 'package:tasky/core/text_styles.dart';
 import 'package:tasky/core/widgets/custom_app_bar.dart';
 import 'package:tasky/core/widgets/custom_button.dart';
+import 'package:tasky/core/widgets/custom_error%20_snack_bar.dart';
+import 'package:tasky/core/widgets/custom_success_snack_bar.dart';
 
 import 'custom_task_text_field.dart';
 
@@ -23,7 +25,13 @@ class AddTaskViewBody extends StatelessWidget {
         child: SingleChildScrollView(
           child: BlocConsumer<TaskCubit, TaskState>(
             listener: (context, state) {
-              // TODO: implement listener
+              if (state is UploadImageSuccessState) {
+                CustomSuccessSnackbar.showSuccess(
+                    context: context, message: 'successfully uploaded');
+              } else if (state is UploadImageErrorState) {
+                CustomSnackbar.showError(
+                    context: context, message: state.errorMessage);
+              }
             },
             builder: (context, state) {
               final taskCubit = BlocProvider.of<TaskCubit>(context);
@@ -37,10 +45,10 @@ class AddTaskViewBody extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 22),
                     child: Column(
                       children: [
-                        taskCubit.imagePath == null
+                        taskCubit.image == null
                             ? AddImageButton(
-                                onImageSelected: (imagePath) {
-                                  taskCubit.saveImagePath(imagePath);
+                                onImageSelected: (image) {
+                                  taskCubit.saveImagePath(image);
                                 },
                               )
                             : GestureDetector(
@@ -50,7 +58,7 @@ class AddTaskViewBody extends StatelessWidget {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(12),
                                   child: Image.file(
-                                    File(taskCubit.imagePath!),
+                                    File(taskCubit.image!.path),
                                     fit: BoxFit.cover,
                                     width: double.infinity,
                                     height: 300,
@@ -102,7 +110,11 @@ class AddTaskViewBody extends StatelessWidget {
                             text: 'Add task',
                             style: Styles.styleBold19(context),
                             hasIcon: false,
-                            onPressed: () {}),
+                            onPressed: () async {
+                              if (taskCubit.image != null) {
+                                await taskCubit.uploadImage();
+                              }
+                            }),
                         const SizedBox(height: 22),
                       ],
                     ),

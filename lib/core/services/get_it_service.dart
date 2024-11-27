@@ -12,6 +12,8 @@ import 'package:tasky/Features/Auth/Domain/repos/profile_info_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
+import 'package:tasky/Features/Tasks/Data/Repos/upload_image_repo_impl.dart';
+import 'package:tasky/Features/Tasks/Domain/Repos/upload_image_repo.dart';
 import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
 import 'package:tasky/core/Api/api_consumer.dart';
 import 'package:tasky/core/Api/api_interceptors.dart';
@@ -78,7 +80,13 @@ Future<void> setup() async {
         sharedPreferences: getIt()),
   );
 
+  getIt.registerLazySingleton<UploadImageRepo>(() => UploadImageRepoImpl(
+        apiConsumer: getIt(),
+      ));
+
   getIt.registerFactory<TaskCubit>(
-    () => TaskCubit(),
+    () => TaskCubit(
+      uploadImageRepo: getIt(),
+    ),
   );
 }

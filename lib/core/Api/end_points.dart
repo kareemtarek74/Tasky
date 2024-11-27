@@ -5,6 +5,7 @@ class EndPoints {
   static String logout = '$baseUrl/auth/logout';
   static String getProfile = '$baseUrl/auth/profile';
   static String refreshToken = '$baseUrl/auth/refresh-token';
+  static String uploadImage = '$baseUrl/upload/image';
 }
 
 class ApiKeys {
@@ -20,4 +21,5 @@ class ApiKeys {
   static String accessToken = "access_token";
   static String refreshToken = "refresh_token";
   static String token = "token";
+  static String image = "image";
 }

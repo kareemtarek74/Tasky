@@ -34,7 +34,17 @@ class TaskDueDateUpdated extends TaskState {
 }
 
 class TaskImageUpdated extends TaskState {
-  final String? imagePath;
+  final XFile? imagePath;
 
   const TaskImageUpdated({required this.imagePath});
+}
+
+class UploadImageLoadingState extends TaskState {}
+
+class UploadImageSuccessState extends TaskState {}
+
+class UploadImageErrorState extends TaskState {
+  final String errorMessage;
+
+  const UploadImageErrorState({required this.errorMessage});
 }

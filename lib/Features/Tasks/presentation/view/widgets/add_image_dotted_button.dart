@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddImageButton extends StatelessWidget {
-  final Function(String imagePath) onImageSelected;
+  final Function(XFile? image) onImageSelected;
 
   const AddImageButton({super.key, required this.onImageSelected});
 
@@ -75,10 +75,11 @@ class AddImageButton extends StatelessWidget {
 
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
     final ImagePicker picker = ImagePicker();
-    final XFile? pickedImage = await picker.pickImage(source: source);
+    final XFile? pickedImage =
+        await picker.pickImage(source: source, imageQuality: 70);
 
     if (pickedImage != null) {
-      onImageSelected(pickedImage.path);
+      onImageSelected(pickedImage);
       print(pickedImage);
     }
   }

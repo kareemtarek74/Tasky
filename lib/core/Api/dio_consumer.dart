@@ -14,6 +14,10 @@ class DioConsumer extends ApiConsumer {
   }) {
     dio.options.baseUrl = EndPoints.baseUrl;
 
+    dio.options.connectTimeout = const Duration(seconds: 180);
+    dio.options.receiveTimeout = const Duration(seconds: 180);
+    dio.options.sendTimeout = const Duration(seconds: 180);
+
     dio.interceptors.add(getIt<ApiInterceptors>());
     if (kDebugMode) {
       dio.interceptors.add(
@@ -74,6 +78,8 @@ class DioConsumer extends ApiConsumer {
       return response.data;
     } on DioException catch (e) {
       handleDioExceptions(e);
+      debugPrint('DioException: ${e.message}');
+      debugPrint('Error Details: ${e.response?.data}');
     }
   }
 }

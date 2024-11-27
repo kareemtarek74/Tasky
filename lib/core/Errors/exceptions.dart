@@ -16,7 +16,11 @@ void handleDioExceptions(DioException e) {
     case DioExceptionType.sendTimeout:
       throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
     case DioExceptionType.receiveTimeout:
-      throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+      throw ServerException(
+          errorModel: ErrorModel.fromJson({
+        "message":
+            "انتهت مهلة الاستجابة. يرجى المحاولة لاحقًا أو التحقق من اتصالك بالإنترنت."
+      }));
     case DioExceptionType.badCertificate:
       throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
     case DioExceptionType.cancel:
@@ -26,7 +30,9 @@ void handleDioExceptions(DioException e) {
           errorModel: ErrorModel.fromJson(
               {"message": "There is a network connection problem"}));
     case DioExceptionType.unknown:
-      throw ServerException(errorModel: ErrorModel.fromJson(e.response!.data));
+      throw ServerException(
+          errorModel: ErrorModel.fromJson(
+              {"message": "There is a problem please try again"}));
     case DioExceptionType.badResponse:
       switch (e.response?.statusCode) {
         case 400:
