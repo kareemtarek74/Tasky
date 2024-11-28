@@ -39,6 +39,12 @@ class TaskImageUpdated extends TaskState {
   const TaskImageUpdated({required this.imagePath});
 }
 
+class TaskAutovalidateModeUpdated extends TaskState {
+  final AutovalidateMode autovalidateMode;
+
+  const TaskAutovalidateModeUpdated(this.autovalidateMode);
+}
+
 class UploadImageLoadingState extends TaskState {}
 
 class UploadImageSuccessState extends TaskState {}
@@ -47,4 +53,16 @@ class UploadImageErrorState extends TaskState {
   final String errorMessage;
 
   const UploadImageErrorState({required this.errorMessage});
+}
+
+class TaskFieldsReset extends TaskState {}
+
+class CreateTaskLoadingState extends TaskState {}
+
+class CreateTaskSuccessState extends TaskState {}
+
+class CreateTaskErrorState extends TaskState {
+  final String errorMessage;
+
+  const CreateTaskErrorState({required this.errorMessage});
 }

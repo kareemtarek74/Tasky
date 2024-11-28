@@ -76,7 +76,7 @@ class AddImageButton extends StatelessWidget {
   Future<void> _pickImage(BuildContext context, ImageSource source) async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedImage =
-        await picker.pickImage(source: source, imageQuality: 70);
+        await picker.pickImage(source: source, imageQuality: 40);
 
     if (pickedImage != null) {
       onImageSelected(pickedImage);

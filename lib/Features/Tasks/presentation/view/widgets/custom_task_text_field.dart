@@ -6,8 +6,12 @@ class CustomTaskTextField extends StatelessWidget {
   final String label;
   final String hintText;
   final int maxLines;
+  final TextEditingController? controller;
+  final AutovalidateMode? autovalidateMode;
 
   const CustomTaskTextField({
+    required this.autovalidateMode,
+    required this.controller,
     required this.label,
     required this.hintText,
     this.maxLines = 1,
@@ -23,7 +27,15 @@ class CustomTaskTextField extends StatelessWidget {
             style: Styles.styleRegular12(context)
                 .copyWith(color: const Color(0xff6E6A7C))),
         const SizedBox(height: 8),
-        TextField(
+        TextFormField(
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'It is required';
+            }
+            return null;
+          },
+          autovalidateMode: autovalidateMode,
+          controller: controller,
           maxLines: maxLines,
           decoration: InputDecoration(
             hintText: hintText,

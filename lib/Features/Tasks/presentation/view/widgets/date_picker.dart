@@ -29,7 +29,7 @@ class DueDatePicker extends StatelessWidget {
       builder: (context, state) {
         String dueDateText =
             context.read<TaskCubit>().dueDateController.text.isEmpty
-                ? 'Choose due date...'
+                ? 'Select a date from the Calendar'
                 : context.read<TaskCubit>().dueDateController.text;
 
         return TextField(

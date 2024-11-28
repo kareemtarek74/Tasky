@@ -2,13 +2,16 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tasky/Features/Tasks/Domain/Repos/create_task_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/upload_image_repo.dart';
 
 part 'task_state.dart';
 
 class TaskCubit extends Cubit<TaskState> {
   final UploadImageRepo uploadImageRepo;
-  TaskCubit({required this.uploadImageRepo}) : super(TaskInitial()) {
+  final CreateTaskRepo createTaskRepo;
+  TaskCubit({required this.createTaskRepo, required this.uploadImageRepo})
+      : super(TaskInitial()) {
     prioritySelected = "medium";
   }
   static TaskCubit get(context) => BlocProvider.of(context);
@@ -16,6 +19,18 @@ class TaskCubit extends Cubit<TaskState> {
   String? prioritySelected;
   XFile? image;
   String? uploadedImage;
+
+  final createTaskFormKey = GlobalKey<FormState>();
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
+  TextEditingController dueDateController = TextEditingController();
+
+  AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
+
+  void updateAutovalidateMode(AutovalidateMode mode) {
+    autovalidateMode = mode;
+    emit(TaskAutovalidateModeUpdated(autovalidateMode));
+  }
 
   final Map<String, Color> flagColors = {
     "Low Priority": const Color(0xFF0087FF),
@@ -52,8 +67,6 @@ class TaskCubit extends Cubit<TaskState> {
     );
   }
 
-  TextEditingController dueDateController = TextEditingController();
-
   void updateDueDate(String dueDate) {
     dueDateController.text = dueDate;
     emit(TaskDueDateUpdated(dueDate: dueDate));
@@ -84,5 +97,34 @@ class TaskCubit extends Cubit<TaskState> {
       emit(const UploadImageErrorState(
           errorMessage: 'يرجى اختيار صورة قبل رفعها.'));
     }
+  }
+
+  void resetFields() {
+    titleController.clear();
+    descriptionController.clear();
+    dueDateController.clear();
+    image = null;
+    uploadedImage = null;
+    autovalidateMode = AutovalidateMode.disabled;
+    emit(TaskFieldsReset());
+  }
+
+  Future<void> creatTasks() async {
+    emit(CreateTaskLoadingState());
+    final response = await createTaskRepo.createTask(
+        image: uploadedImage,
+        title: titleController.text,
+        description: descriptionController.text,
+        dueDate: dueDateController.text,
+        priority: prioritySelected);
+    response.fold((error) {
+      debugPrint('خطأ أثناء انشاء التاسك: $error');
+
+      emit(CreateTaskErrorState(errorMessage: error));
+    }, (createTaskEntity) {
+      debugPrint(' task created successfully : $createTaskEntity');
+      resetFields();
+      emit(CreateTaskSuccessState());
+    });
   }
 }

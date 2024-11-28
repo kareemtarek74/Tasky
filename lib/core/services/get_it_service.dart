@@ -12,7 +12,9 @@ import 'package:tasky/Features/Auth/Domain/repos/profile_info_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
+import 'package:tasky/Features/Tasks/Data/Repos/create_task_repo_impl.dart';
 import 'package:tasky/Features/Tasks/Data/Repos/upload_image_repo_impl.dart';
+import 'package:tasky/Features/Tasks/Domain/Repos/create_task_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/upload_image_repo.dart';
 import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
 import 'package:tasky/core/Api/api_consumer.dart';
@@ -84,9 +86,14 @@ Future<void> setup() async {
         apiConsumer: getIt(),
       ));
 
+  getIt.registerLazySingleton<CreateTaskRepo>(() => CreateTaskRepoImpl(
+        apiConsumer: getIt(),
+      ));
+
   getIt.registerFactory<TaskCubit>(
     () => TaskCubit(
       uploadImageRepo: getIt(),
+      createTaskRepo: getIt(),
     ),
   );
 }
