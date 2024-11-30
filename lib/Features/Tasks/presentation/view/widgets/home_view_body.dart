@@ -17,12 +17,13 @@ class HomeViewBody extends StatelessWidget {
               padding: EdgeInsets.only(left: 22, right: 16),
               child: CustomHomeAppBar(),
             ),
-            CustomHomeBody(),
-            Spacer(),
-            CustomFloatingButtons(),
-            SizedBox(
-              height: 32,
+            Expanded(
+              child: CustomScrollView(slivers: [
+                SliverFillRemaining(child: CustomHomeBody()),
+              ]),
             ),
+            CustomFloatingButtons(),
+            SizedBox(height: 32),
           ],
         ),
       ),

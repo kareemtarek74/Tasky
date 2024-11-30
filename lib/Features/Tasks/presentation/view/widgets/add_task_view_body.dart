@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:tasky/Features/Tasks/presentation/view/home_view.dart';
 import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
 import 'package:tasky/Features/Tasks/presentation/view/widgets/add_image_dotted_button.dart';
 import 'package:tasky/Features/Tasks/presentation/view/widgets/date_picker.dart';
@@ -29,6 +30,9 @@ class _AddTaskViewBodyState extends State<AddTaskViewBody> {
       listener: (context, state) {
         if (state is CreateTaskSuccessState) {
           Navigator.pop(context);
+          BlocProvider.of<TaskCubit>(context).getTasksList();
+          Navigator.pushNamedAndRemoveUntil(
+              context, HomeView.routeName, (route) => false);
         } else if (state is UploadImageErrorState) {
           CustomSnackbar.showError(
               context: context, message: state.errorMessage);

@@ -7,6 +7,7 @@ class EndPoints {
   static String refreshToken = '$baseUrl/auth/refresh-token';
   static String uploadImage = '$baseUrl/upload/image';
   static String createTask = '$baseUrl/todos';
+  static String getTasksList = '$baseUrl/todos';
 }
 
 class ApiKeys {
@@ -27,4 +28,7 @@ class ApiKeys {
   static String description = "desc";
   static String priority = "priority";
   static String date = "dueDate";
+  static String progressStatue = "inProgress";
+  static String waitingStatue = "waiting";
+  static String finishedStatue = "finished";
 }

@@ -13,7 +13,7 @@ class LogoutButton extends StatelessWidget {
       tooltip: 'Logout', // Optional tooltip for better UX
       icon: const Icon(
         Icons.logout,
-        size: 24, // Slightly larger for better visibility
+        size: 27, // Slightly larger for better visibility
         color: Color(0xff5F33E1),
       ),
       onPressed: () async {

@@ -2,23 +2,32 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:tasky/Features/Tasks/Domain/Entities/create_task_entity.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/create_task_repo.dart';
+import 'package:tasky/Features/Tasks/Domain/Repos/get_tasks_list_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/upload_image_repo.dart';
+import 'package:tasky/core/Api/end_points.dart';
 
 part 'task_state.dart';
 
 class TaskCubit extends Cubit<TaskState> {
   final UploadImageRepo uploadImageRepo;
   final CreateTaskRepo createTaskRepo;
-  TaskCubit({required this.createTaskRepo, required this.uploadImageRepo})
+  final GetTasksListRepo getTasksListRepo;
+  TaskCubit(
+      {required this.getTasksListRepo,
+      required this.createTaskRepo,
+      required this.uploadImageRepo})
       : super(TaskInitial()) {
     prioritySelected = "medium";
+    statusSelected = ApiKeys.waitingStatue;
   }
-  static TaskCubit get(context) => BlocProvider.of(context);
 
   String? prioritySelected;
+  String? statusSelected;
   XFile? image;
   String? uploadedImage;
+  int indexNumSelected = 0;
 
   final createTaskFormKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
@@ -31,6 +40,11 @@ class TaskCubit extends Cubit<TaskState> {
     autovalidateMode = mode;
     emit(TaskAutovalidateModeUpdated(autovalidateMode));
   }
+
+  List<CreateTaskEntity> allTasks = [];
+  List<CreateTaskEntity> inPogress = [];
+  List<CreateTaskEntity> waiting = [];
+  List<CreateTaskEntity> finished = [];
 
   final Map<String, Color> flagColors = {
     "Low Priority": const Color(0xFF0087FF),
@@ -56,6 +70,28 @@ class TaskCubit extends Cubit<TaskState> {
     "high": "High Priority",
   };
 
+  final Map<String, Color> statusFieldColors = {
+    "Waiting": const Color(0xFFFFE4F2),
+    "In Progress": const Color(0xFFF0ECFF),
+    "Finished": const Color(0xFFE3F2FF),
+  };
+
+  final Map<String, String> statusDisplayToApi = {
+    "Waiting": ApiKeys.waitingStatue,
+    "In Progress": ApiKeys.progressStatue,
+    "Finished": ApiKeys.finishedStatue,
+  };
+
+  void updateStatus(String displayValue) {
+    statusSelected = statusDisplayToApi[displayValue];
+    emit(
+      TaskStatusUpdated(
+        selectedStatus: displayValue,
+        statusfieldColor: fieldColors[displayValue]!,
+      ),
+    );
+  }
+
   void updatePriority(String displayValue) {
     prioritySelected = displayToApi[displayValue];
     emit(
@@ -65,6 +101,11 @@ class TaskCubit extends Cubit<TaskState> {
         fieldColor: fieldColors[displayValue]!,
       ),
     );
+  }
+
+  void updateIndexSelected(int index) {
+    indexNumSelected = index;
+    emit(IndexNumUpdatedSuccessState(indexnum: index));
   }
 
   void updateDueDate(String dueDate) {
@@ -125,6 +166,36 @@ class TaskCubit extends Cubit<TaskState> {
       debugPrint(' task created successfully : $createTaskEntity');
       resetFields();
       emit(CreateTaskSuccessState());
+    });
+  }
+
+  Future<void> getTasksList() async {
+    emit(GetTasksListLoadingState());
+    allTasks.clear();
+    inPogress.clear();
+    waiting.clear();
+    finished.clear();
+
+    final response = await getTasksListRepo.getTasksList();
+    response.fold((error) {
+      emit(GetTasksListErrorState(errorMessage: error));
+    }, (tasksListEntity) {
+      for (var tasks in tasksListEntity) {
+        allTasks.add(tasks);
+        switch (tasks.statue) {
+          case "inProgress":
+            inPogress.add(tasks);
+            break;
+          case "waiting":
+            waiting.add(tasks);
+            break;
+          case "finished":
+            finished.add(tasks);
+            break;
+          default:
+        }
+      }
+      emit(GetTasksListSuccessState());
     });
   }
 }
