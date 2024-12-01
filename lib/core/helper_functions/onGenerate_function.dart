@@ -6,6 +6,7 @@ import 'package:tasky/Features/Tasks/presentation/view/add_task_view.dart';
 import 'package:tasky/Features/Tasks/presentation/view/home_view.dart';
 import 'package:tasky/Features/intro/presentation/views/intro_view.dart';
 
+import '../../Features/Tasks/presentation/view/qr_scanner_view.dart';
 import '../../Features/Tasks/presentation/view/widgets/task_details_view.dart';
 
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -27,6 +28,9 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
           builder: (context) => TaskDetailsView(
                 id: settings.arguments.toString(),
               ));
+
+    case QRScannerPage.routeName:
+      return MaterialPageRoute(builder: (context) => const QRScannerPage());
     default:
       return MaterialPageRoute(builder: (context) => const IntroView());
   }

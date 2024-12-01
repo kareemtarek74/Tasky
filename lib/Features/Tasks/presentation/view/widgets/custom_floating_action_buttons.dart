@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tasky/Features/Tasks/presentation/view/add_task_view.dart';
+import 'package:tasky/Features/Tasks/presentation/view/qr_scanner_view.dart';
 
 class CustomFloatingButtons extends StatelessWidget {
   const CustomFloatingButtons({
@@ -19,7 +20,9 @@ class CustomFloatingButtons extends StatelessWidget {
                 width: 50,
                 height: 50,
                 child: FloatingActionButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.pushNamed(context, QRScannerPage.routeName);
+                  },
                   backgroundColor: const Color(0xFFEAE5FF),
                   heroTag: 'qrCodeButton',
                   elevation: 1,

@@ -1,14 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tasky/Features/Auth/presentation/views/widgets/custom_error_widget.dart';
 import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
 import 'package:tasky/Features/Tasks/presentation/view/widgets/custom_task_details_body.dart';
 import 'package:tasky/core/widgets/custom_app_bar.dart';
 import 'package:tasky/core/widgets/custom_progress_indicator.dart';
 
-class TaskDetailsViewBody extends StatelessWidget {
+class TaskDetailsViewBody extends StatefulWidget {
   const TaskDetailsViewBody({super.key, required this.iD});
   final String iD;
+
+  @override
+  State<TaskDetailsViewBody> createState() => _TaskDetailsViewBodyState();
+}
+
+class _TaskDetailsViewBodyState extends State<TaskDetailsViewBody> {
+  bool isDataLoaded = false; // للتأكد من تحميل البيانات مرة واحدة فقط
+
+  @override
+  void initState() {
+    super.initState();
+    // استدعاء Cubit لتحميل البيانات فقط إذا كانت البيانات لم تُحمّل بعد
+    if (!isDataLoaded) {
+      BlocProvider.of<TaskCubit>(context).getTaskDetails(iD: widget.iD);
+      isDataLoaded = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,24 +55,37 @@ class TaskDetailsViewBody extends StatelessWidget {
                       errorMessage: state.errorMessage,
                       onRetry: () {
                         BlocProvider.of<TaskCubit>(context)
-                            .getTaskDetails(iD: iD);
+                            .getTaskDetails(iD: widget.iD);
                       },
                     );
                   } else if (state is GetTaskDetailsSuccessState) {
-                    return CustomTaskDetailsBody(
-                      task: state.task,
-                    );
-                  } else {
-                    return CustomErrorWidget(
-                      errorMessage: 'There was an error, please try again',
-                      onRetry: () {
-                        BlocProvider.of<TaskCubit>(context)
-                            .getTaskDetails(iD: iD);
-                      },
+                    return Column(
+                      children: [
+                        CustomTaskDetailsBody(
+                          task: state.task,
+                        ),
+                        const SizedBox(height: 20),
+                        // Display QR Code for the task ID
+                        QrImageView(
+                          data: "task/${widget.iD}",
+                          version: QrVersions.auto,
+                          size: 300,
+                        ),
+                        const SizedBox(
+                          height: 30,
+                        )
+                      ],
                     );
                   }
+                  return CustomErrorWidget(
+                    errorMessage: 'There was an error, please try again',
+                    onRetry: () {
+                      BlocProvider.of<TaskCubit>(context)
+                          .getTaskDetails(iD: widget.iD);
+                    },
+                  );
                 },
-              )
+              ),
             ],
           ),
         ),

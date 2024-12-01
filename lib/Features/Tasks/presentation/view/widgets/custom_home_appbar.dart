@@ -38,7 +38,7 @@ class CustomHomeAppBar extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: Text(
-              'Logo',
+              'Tasky',
               style: Styles.styleBold24(context)
                   .copyWith(color: const Color(0xff24252C)),
             ),
