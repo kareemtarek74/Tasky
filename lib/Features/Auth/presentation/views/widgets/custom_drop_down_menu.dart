@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:tasky/core/text_styles.dart';
 
 class CustomDropdown extends StatelessWidget {
-  const CustomDropdown({super.key});
+  const CustomDropdown({super.key, this.iconSize = 24});
+  final double iconSize;
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +14,8 @@ class CustomDropdown extends StatelessWidget {
         return [
           PopupMenuItem<String>(
             value: 'edit',
-            padding: EdgeInsets.zero, // إزالة البادينج الافتراضي
-            height: 30, // تحديد الارتفاع مثل التصميم
+            padding: EdgeInsets.zero,
+            height: 30,
             child: Padding(
               padding: const EdgeInsets.only(
                   left: 16, right: 16, top: 20.5, bottom: 12.5),
@@ -38,14 +39,14 @@ class CustomDropdown extends StatelessWidget {
               )),
           PopupMenuItem<String>(
             value: 'delete',
-            padding: EdgeInsets.zero, // إزالة البادينج الافتراضي
-            height: 30, // تحديد الارتفاع مثل التصميم
+            padding: EdgeInsets.zero,
+            height: 30,
             child: Padding(
               padding: const EdgeInsets.only(
                   left: 16, right: 16, top: 12.5, bottom: 20.5),
               child: Text(
                 'Delete',
-                textAlign: TextAlign.center, // محاذاة النص في المنتصف
+                textAlign: TextAlign.center,
                 style: Styles.styleMedium16(context).copyWith(
                   color: const Color(0xFFFF7D53),
                   height: 0.09,
@@ -55,9 +56,11 @@ class CustomDropdown extends StatelessWidget {
           ),
         ];
       },
-      icon: const Icon(Icons.more_vert), iconSize: 24,
-      elevation: 8, padding: EdgeInsets.zero,
-      offset: const Offset(-8, 48), // المسافة بين الأيقونة والقائمة
+      icon: const Icon(Icons.more_vert),
+      iconSize: iconSize,
+      elevation: 8,
+      padding: EdgeInsets.zero,
+      offset: const Offset(-11, 48),
     );
   }
 }
@@ -68,38 +71,32 @@ class TooltipShape extends ShapeBorder {
 
   @override
   Path getOuterPath(Rect rect, {TextDirection? textDirection}) {
-    const double arrowWidth = 16; // عرض السهم
-    const double arrowHeight = 12; // ارتفاع السهم
-    const double radius = 12; // نصف قطر الزوايا
+    const double arrowWidth = 16;
+    const double arrowHeight = 12;
+    const double radius = 12;
 
     final Path path = Path();
 
-    // السهم في الزاوية اليمنى العلوية
-    path.moveTo(rect.right - radius - arrowWidth / 2, rect.top); // بداية السهم
-    path.lineTo(rect.right - radius, rect.top - arrowHeight); // رأس السهم
-    path.lineTo(rect.right - radius + arrowWidth / 2, rect.top); // نهاية السهم
+    path.moveTo(rect.right - radius - arrowWidth / 2, rect.top);
+    path.lineTo(rect.right - radius, rect.top - arrowHeight);
+    path.lineTo(rect.right - radius + arrowWidth / 2, rect.top);
 
-    // الزاوية العلوية اليمنى
     path.lineTo(rect.right - radius, rect.top);
     path.arcToPoint(Offset(rect.right, rect.top + radius),
         radius: const Radius.circular(radius));
 
-    // الجانب الأيمن
     path.lineTo(rect.right, rect.bottom - radius);
     path.arcToPoint(Offset(rect.right - radius, rect.bottom),
         radius: const Radius.circular(radius));
 
-    // الزاوية السفلية اليسرى
     path.lineTo(rect.left + radius, rect.bottom);
     path.arcToPoint(Offset(rect.left, rect.bottom - radius),
         radius: const Radius.circular(radius));
 
-    // الجانب الأيسر
     path.lineTo(rect.left, rect.top + radius);
     path.arcToPoint(Offset(rect.left + radius, rect.top),
         radius: const Radius.circular(radius));
 
-    // الزاوية العلوية اليسرى
     path.lineTo(rect.right - radius - arrowWidth / 2, rect.top);
 
     path.close();

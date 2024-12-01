@@ -8,6 +8,7 @@ class EndPoints {
   static String uploadImage = '$baseUrl/upload/image';
   static String createTask = '$baseUrl/todos';
   static String getTasksList = '$baseUrl/todos';
+  static String getTaskDetails = '$baseUrl/todos/';
 }
 
 class ApiKeys {

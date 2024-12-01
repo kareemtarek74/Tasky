@@ -6,6 +6,8 @@ import 'package:tasky/Features/Tasks/presentation/view/add_task_view.dart';
 import 'package:tasky/Features/Tasks/presentation/view/home_view.dart';
 import 'package:tasky/Features/intro/presentation/views/intro_view.dart';
 
+import '../../Features/Tasks/presentation/view/widgets/task_details_view.dart';
+
 Route<dynamic> onGenerateRoute(RouteSettings settings) {
   switch (settings.name) {
     case IntroView.routeName:
@@ -20,6 +22,11 @@ Route<dynamic> onGenerateRoute(RouteSettings settings) {
       return MaterialPageRoute(builder: (context) => const ProfileInfoView());
     case AddTaskView.routeName:
       return MaterialPageRoute(builder: (context) => const AddTaskView());
+    case TaskDetailsView.routeName:
+      return MaterialPageRoute(
+          builder: (context) => TaskDetailsView(
+                id: settings.arguments.toString(),
+              ));
     default:
       return MaterialPageRoute(builder: (context) => const IntroView());
   }

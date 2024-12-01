@@ -95,3 +95,17 @@ class GetTasksListErrorState extends TaskState {
 
   const GetTasksListErrorState({required this.errorMessage});
 }
+
+class GetTaskDetailsLoadingState extends TaskState {}
+
+class GetTaskDetailsSuccessState extends TaskState {
+  final CreateTaskEntity task;
+
+  const GetTaskDetailsSuccessState({required this.task});
+}
+
+class GetTaskDetailsErrorState extends TaskState {
+  final String errorMessage;
+
+  const GetTaskDetailsErrorState({required this.errorMessage});
+}

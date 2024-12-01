@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tasky/Features/Tasks/Domain/Entities/create_task_entity.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/create_task_repo.dart';
+import 'package:tasky/Features/Tasks/Domain/Repos/get_task_details_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/get_tasks_list_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/upload_image_repo.dart';
 import 'package:tasky/core/Api/end_points.dart';
@@ -14,8 +15,10 @@ class TaskCubit extends Cubit<TaskState> {
   final UploadImageRepo uploadImageRepo;
   final CreateTaskRepo createTaskRepo;
   final GetTasksListRepo getTasksListRepo;
+  final GetTaskDetailsRepo getTaskDetailsRepo;
   TaskCubit(
-      {required this.getTasksListRepo,
+      {required this.getTaskDetailsRepo,
+      required this.getTasksListRepo,
       required this.createTaskRepo,
       required this.uploadImageRepo})
       : super(TaskInitial()) {
@@ -45,6 +48,18 @@ class TaskCubit extends Cubit<TaskState> {
   List<CreateTaskEntity> inPogress = [];
   List<CreateTaskEntity> waiting = [];
   List<CreateTaskEntity> finished = [];
+
+  CreateTaskEntity detailedTask = CreateTaskEntity(
+      imge: '',
+      tiTle: '',
+      decription: '',
+      prior: '',
+      statue: '',
+      userId: '',
+      taskId: '',
+      createAt: DateTime.now(),
+      updateAt: DateTime.now(),
+      V: 0);
 
   final Map<String, Color> flagColors = {
     "Low Priority": const Color(0xFF0087FF),
@@ -196,6 +211,17 @@ class TaskCubit extends Cubit<TaskState> {
         }
       }
       emit(GetTasksListSuccessState());
+    });
+  }
+
+  Future<void> getTaskDetails({required String iD}) async {
+    emit(GetTaskDetailsLoadingState());
+    final response = await getTaskDetailsRepo.getTaskDetails(id: iD);
+    response.fold((error) {
+      emit(GetTaskDetailsErrorState(errorMessage: error));
+    }, (task) {
+      detailedTask = task;
+      emit(GetTaskDetailsSuccessState(task: task));
     });
   }
 }
