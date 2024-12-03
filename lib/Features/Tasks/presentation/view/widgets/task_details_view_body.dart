@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:tasky/Features/Auth/presentation/views/widgets/custom_error_widget.dart';
+import 'package:tasky/Features/Tasks/presentation/view/home_view.dart';
 import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
 import 'package:tasky/Features/Tasks/presentation/view/widgets/custom_task_details_body.dart';
 import 'package:tasky/core/widgets/custom_app_bar.dart';
@@ -41,7 +42,13 @@ class _TaskDetailsViewBodyState extends State<TaskDetailsViewBody> {
                 hasIcon: true,
                 padding: const EdgeInsets.only(top: 12, left: 22, right: 10),
               ),
-              BlocBuilder<TaskCubit, TaskState>(
+              BlocConsumer<TaskCubit, TaskState>(
+                listener: (context, state) {
+                  if (state is DeleteTaskSuccessState) {
+                    Navigator.pushNamedAndRemoveUntil(
+                        context, HomeView.routeName, (route) => false);
+                  }
+                },
                 builder: (context, state) {
                   if (state is GetTaskDetailsLoadingState) {
                     return SizedBox(
@@ -76,12 +83,11 @@ class _TaskDetailsViewBodyState extends State<TaskDetailsViewBody> {
                       ],
                     );
                   }
-                  return CustomErrorWidget(
-                    errorMessage: 'There was an error, please try again',
-                    onRetry: () {
-                      BlocProvider.of<TaskCubit>(context)
-                          .getTaskDetails(iD: widget.iD);
-                    },
+                  return SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.8,
+                    child: const Center(
+                      child: CustomProgressIndicator(),
+                    ),
                   );
                 },
               ),

@@ -13,11 +13,13 @@ import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
 import 'package:tasky/Features/Tasks/Data/Repos/create_task_repo_impl.dart';
+import 'package:tasky/Features/Tasks/Data/Repos/delete_task_repo_impl.dart';
 import 'package:tasky/Features/Tasks/Data/Repos/edit_task_repo_impl.dart';
 import 'package:tasky/Features/Tasks/Data/Repos/get_task_details_repo_impl.dart';
 import 'package:tasky/Features/Tasks/Data/Repos/get_tasks_list_repo_impl.dart';
 import 'package:tasky/Features/Tasks/Data/Repos/upload_image_repo_impl.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/create_task_repo.dart';
+import 'package:tasky/Features/Tasks/Domain/Repos/delete_task_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/edit_task_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/get_task_details_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/get_tasks_list_repo.dart';
@@ -108,6 +110,10 @@ Future<void> setup() async {
         apiConsumer: getIt(),
       ));
 
+  getIt.registerLazySingleton<DeleteTaskRepo>(() => DeleteTaskRepoImpl(
+        apiConsumer: getIt(),
+      ));
+
   getIt.registerFactory<TaskCubit>(
     () => TaskCubit(
       uploadImageRepo: getIt(),
@@ -115,6 +121,7 @@ Future<void> setup() async {
       getTasksListRepo: getIt(),
       getTaskDetailsRepo: getIt(),
       editTaskRepo: getIt(),
+      deleteTaskRepo: getIt(),
     ),
   );
 }

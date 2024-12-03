@@ -30,10 +30,10 @@ class _EditTaskViewBodyState extends State<EditTaskViewBody> {
     return BlocConsumer<TaskCubit, TaskState>(
       listener: (context, state) async {
         if (state is EditTaskSuccessState) {
+          await BlocProvider.of<TaskCubit>(context).getTasksList();
           Navigator.pop(context);
           Navigator.pushNamedAndRemoveUntil(
               context, HomeView.routeName, (route) => false);
-          await BlocProvider.of<TaskCubit>(context).getTasksList();
         } else if (state is UploadImageErrorState) {
           CustomSnackbar.showError(
               context: context, message: state.errorMessage);
@@ -45,10 +45,11 @@ class _EditTaskViewBodyState extends State<EditTaskViewBody> {
       builder: (context, state) {
         final taskCubit = BlocProvider.of<TaskCubit>(context);
         return ModalProgressHUD(
-          inAsyncCall:
-              state is UploadImageLoadingState || state is EditTaskLoadingState
-                  ? true
-                  : false,
+          inAsyncCall: state is UploadImageLoadingState ||
+                  state is EditTaskLoadingState ||
+                  state is GetTasksListLoadingState
+              ? true
+              : false,
           progressIndicator: const CustomProgressIndicator(),
           child: Scaffold(
             backgroundColor: Colors.white,

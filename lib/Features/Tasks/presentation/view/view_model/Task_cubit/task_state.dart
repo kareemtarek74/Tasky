@@ -121,3 +121,13 @@ class EditTaskErrorState extends TaskState {
 
   const EditTaskErrorState({required this.errorMessage});
 }
+
+class DeleteTaskLoadingState extends TaskState {}
+
+class DeleteTaskSuccessState extends TaskState {}
+
+class DeleteTaskErrorState extends TaskState {
+  final String errorMessage;
+
+  const DeleteTaskErrorState({required this.errorMessage});
+}

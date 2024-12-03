@@ -47,6 +47,10 @@ class CustomDropdown extends StatelessWidget {
                 ),
               )),
           PopupMenuItem<String>(
+            onTap: () {
+              BlocProvider.of<TaskCubit>(context).deleteTask(id: id);
+              BlocProvider.of<TaskCubit>(context).getTasksList();
+            },
             value: 'delete',
             padding: EdgeInsets.zero,
             height: 30,

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tasky/Features/Tasks/Domain/Entities/create_task_entity.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/create_task_repo.dart';
+import 'package:tasky/Features/Tasks/Domain/Repos/delete_task_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/edit_task_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/get_task_details_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/get_tasks_list_repo.dart';
@@ -18,8 +19,10 @@ class TaskCubit extends Cubit<TaskState> {
   final GetTasksListRepo getTasksListRepo;
   final GetTaskDetailsRepo getTaskDetailsRepo;
   final EditTaskRepo editTaskRepo;
+  final DeleteTaskRepo deleteTaskRepo;
   TaskCubit(
-      {required this.editTaskRepo,
+      {required this.deleteTaskRepo,
+      required this.editTaskRepo,
       required this.getTaskDetailsRepo,
       required this.getTasksListRepo,
       required this.createTaskRepo,
@@ -254,6 +257,20 @@ class TaskCubit extends Cubit<TaskState> {
       uploadedImage = null;
       getTaskDetails(iD: id);
       emit(EditTaskSuccessState());
+    });
+  }
+
+  Future<void> deleteTask({required String id}) async {
+    emit(DeleteTaskLoadingState());
+    allTasks.clear();
+    inPogress.clear();
+    waiting.clear();
+    finished.clear();
+    final response = await deleteTaskRepo.deleteTask(id: id);
+    response.fold((error) {
+      emit(DeleteTaskErrorState(errorMessage: error));
+    }, (deleted) {
+      emit(DeleteTaskSuccessState());
     });
   }
 }
