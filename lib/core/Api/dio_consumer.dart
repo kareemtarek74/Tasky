@@ -62,7 +62,7 @@ class DioConsumer extends ApiConsumer {
       {Object? data, Map<String, dynamic>? queryParameters}) async {
     try {
       final response =
-          await dio.patch(path, data: data, queryParameters: queryParameters);
+          await dio.put(path, data: data, queryParameters: queryParameters);
       return response.data;
     } on DioException catch (e) {
       handleDioExceptions(e);

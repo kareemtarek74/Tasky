@@ -138,7 +138,9 @@ class CustomTaskItem extends StatelessWidget {
                 ),
               ),
             ),
-            const CustomDropdown()
+            CustomDropdown(
+              id: task.taskId.toString(),
+            )
           ],
         ),
       ),

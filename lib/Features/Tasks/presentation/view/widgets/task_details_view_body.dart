@@ -16,12 +16,11 @@ class TaskDetailsViewBody extends StatefulWidget {
 }
 
 class _TaskDetailsViewBodyState extends State<TaskDetailsViewBody> {
-  bool isDataLoaded = false; // للتأكد من تحميل البيانات مرة واحدة فقط
+  bool isDataLoaded = false;
 
   @override
   void initState() {
     super.initState();
-    // استدعاء Cubit لتحميل البيانات فقط إذا كانت البيانات لم تُحمّل بعد
     if (!isDataLoaded) {
       BlocProvider.of<TaskCubit>(context).getTaskDetails(iD: widget.iD);
       isDataLoaded = true;
@@ -36,10 +35,11 @@ class _TaskDetailsViewBodyState extends State<TaskDetailsViewBody> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              const CustomAppBar(
+              CustomAppBar(
+                id: widget.iD,
                 title: 'Task Details',
                 hasIcon: true,
-                padding: EdgeInsets.only(top: 12, left: 22, right: 10),
+                padding: const EdgeInsets.only(top: 12, left: 22, right: 10),
               ),
               BlocBuilder<TaskCubit, TaskState>(
                 builder: (context, state) {
@@ -65,7 +65,6 @@ class _TaskDetailsViewBodyState extends State<TaskDetailsViewBody> {
                           task: state.task,
                         ),
                         const SizedBox(height: 20),
-                        // Display QR Code for the task ID
                         QrImageView(
                           data: "task/${widget.iD}",
                           version: QrVersions.auto,

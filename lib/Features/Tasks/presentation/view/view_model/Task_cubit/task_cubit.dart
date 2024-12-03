@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tasky/Features/Tasks/Domain/Entities/create_task_entity.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/create_task_repo.dart';
+import 'package:tasky/Features/Tasks/Domain/Repos/edit_task_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/get_task_details_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/get_tasks_list_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/upload_image_repo.dart';
@@ -16,13 +17,16 @@ class TaskCubit extends Cubit<TaskState> {
   final CreateTaskRepo createTaskRepo;
   final GetTasksListRepo getTasksListRepo;
   final GetTaskDetailsRepo getTaskDetailsRepo;
+  final EditTaskRepo editTaskRepo;
   TaskCubit(
-      {required this.getTaskDetailsRepo,
+      {required this.editTaskRepo,
+      required this.getTaskDetailsRepo,
       required this.getTasksListRepo,
       required this.createTaskRepo,
       required this.uploadImageRepo})
       : super(TaskInitial()) {
     prioritySelected = "medium";
+    statusSelected = 'waiting';
     statusSelected = ApiKeys.waitingStatue;
   }
 
@@ -36,6 +40,9 @@ class TaskCubit extends Cubit<TaskState> {
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
   TextEditingController dueDateController = TextEditingController();
+  final editTaskFormKey = GlobalKey<FormState>();
+  final editTitleController = TextEditingController();
+  final editDescriptionController = TextEditingController();
 
   AutovalidateMode autovalidateMode = AutovalidateMode.disabled;
 
@@ -85,6 +92,12 @@ class TaskCubit extends Cubit<TaskState> {
     "high": "High Priority",
   };
 
+  final Map<String, Color> statusColors = {
+    "Finished": const Color(0xFF0087FF),
+    "In Progress": const Color(0xFF5F33E1),
+    "Waiting": const Color(0xFFFF7D53),
+  };
+
   final Map<String, Color> statusFieldColors = {
     "Waiting": const Color(0xFFFFE4F2),
     "In Progress": const Color(0xFFF0ECFF),
@@ -102,7 +115,8 @@ class TaskCubit extends Cubit<TaskState> {
     emit(
       TaskStatusUpdated(
         selectedStatus: displayValue,
-        statusfieldColor: fieldColors[displayValue]!,
+        statusfieldColor: statusFieldColors[displayValue]!,
+        statusColor: statusColors[displayValue]!,
       ),
     );
   }
@@ -174,11 +188,8 @@ class TaskCubit extends Cubit<TaskState> {
         dueDate: dueDateController.text,
         priority: prioritySelected);
     response.fold((error) {
-      debugPrint('خطأ أثناء انشاء التاسك: $error');
-
       emit(CreateTaskErrorState(errorMessage: error));
     }, (createTaskEntity) {
-      debugPrint(' task created successfully : $createTaskEntity');
       resetFields();
       emit(CreateTaskSuccessState());
     });
@@ -221,7 +232,28 @@ class TaskCubit extends Cubit<TaskState> {
       emit(GetTaskDetailsErrorState(errorMessage: error));
     }, (task) {
       detailedTask = task;
+      editTitleController.text = task.tiTle.toString();
+      editDescriptionController.text = task.decription.toString();
       emit(GetTaskDetailsSuccessState(task: task));
+    });
+  }
+
+  Future<void> editTask(
+      {required String id, required Map<String, dynamic> taskDetails}) async {
+    emit(EditTaskLoadingState());
+    allTasks.clear();
+    inPogress.clear();
+    waiting.clear();
+    finished.clear();
+    final response =
+        await editTaskRepo.editTask(id: id, taskDetais: taskDetails);
+    response.fold((error) {
+      emit(EditTaskErrorState(errorMessage: error));
+    }, (taskEdited) {
+      image = null;
+      uploadedImage = null;
+      getTaskDetails(iD: id);
+      emit(EditTaskSuccessState());
     });
   }
 }

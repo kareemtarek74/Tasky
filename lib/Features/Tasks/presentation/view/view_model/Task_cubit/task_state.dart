@@ -27,14 +27,16 @@ class TaskPriorityUpdated extends TaskState {
 class TaskStatusUpdated extends TaskState {
   final String selectedStatus;
   final Color statusfieldColor;
+  final Color statusColor;
 
   const TaskStatusUpdated({
     required this.selectedStatus,
     required this.statusfieldColor,
+    required this.statusColor,
   });
 
   @override
-  List<Object> get props => [selectedStatus, statusfieldColor];
+  List<Object> get props => [selectedStatus, statusfieldColor, statusColor];
 }
 
 class IndexNumUpdatedSuccessState extends TaskState {
@@ -108,4 +110,14 @@ class GetTaskDetailsErrorState extends TaskState {
   final String errorMessage;
 
   const GetTaskDetailsErrorState({required this.errorMessage});
+}
+
+class EditTaskLoadingState extends TaskState {}
+
+class EditTaskSuccessState extends TaskState {}
+
+class EditTaskErrorState extends TaskState {
+  final String errorMessage;
+
+  const EditTaskErrorState({required this.errorMessage});
 }

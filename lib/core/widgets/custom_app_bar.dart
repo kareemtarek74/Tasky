@@ -9,10 +9,12 @@ class CustomAppBar extends StatelessWidget {
       {super.key,
       required this.title,
       this.hasIcon = false,
-      this.padding = const EdgeInsets.symmetric(horizontal: 22, vertical: 12)});
+      this.padding = const EdgeInsets.symmetric(horizontal: 22, vertical: 12),
+      this.id = '0'});
   final String title;
   final bool hasIcon;
   final EdgeInsetsGeometry padding;
+  final String id;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -41,7 +43,8 @@ class CustomAppBar extends StatelessWidget {
         const Spacer(),
         Visibility(
             visible: hasIcon,
-            child: const CustomDropdown(
+            child: CustomDropdown(
+              id: id,
               iconSize: 28,
             ))
       ]),

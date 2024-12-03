@@ -4,8 +4,10 @@ import 'package:image_picker/image_picker.dart';
 
 class AddImageButton extends StatelessWidget {
   final Function(XFile? image) onImageSelected;
+  final String title;
 
-  const AddImageButton({super.key, required this.onImageSelected});
+  const AddImageButton(
+      {super.key, required this.onImageSelected, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -25,8 +27,8 @@ class AddImageButton extends StatelessWidget {
             color: Color(0xFF5F33E1),
             size: 24,
           ),
-          label: const Text('Add Img',
-              style: TextStyle(color: Color(0xFF5F33E1), fontSize: 16)),
+          label: Text(title,
+              style: const TextStyle(color: Color(0xFF5F33E1), fontSize: 16)),
           style: TextButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),

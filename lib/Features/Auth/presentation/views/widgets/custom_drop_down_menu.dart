@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tasky/Features/Tasks/presentation/view/edit_task_view.dart';
+import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
 import 'package:tasky/core/text_styles.dart';
 
 class CustomDropdown extends StatelessWidget {
-  const CustomDropdown({super.key, this.iconSize = 24});
+  const CustomDropdown({super.key, this.iconSize = 24, required this.id});
   final double iconSize;
+  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -13,6 +17,11 @@ class CustomDropdown extends StatelessWidget {
       itemBuilder: (BuildContext context) {
         return [
           PopupMenuItem<String>(
+            onTap: () async {
+              Navigator.pushNamed(context, EditTaskView.routeName,
+                  arguments: id);
+              await BlocProvider.of<TaskCubit>(context).getTaskDetails(iD: id);
+            },
             value: 'edit',
             padding: EdgeInsets.zero,
             height: 30,
