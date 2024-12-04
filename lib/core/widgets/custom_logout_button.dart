@@ -10,10 +10,10 @@ class LogoutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      tooltip: 'Logout', // Optional tooltip for better UX
+      tooltip: 'Logout',
       icon: const Icon(
         Icons.logout,
-        size: 27, // Slightly larger for better visibility
+        size: 27,
         color: Color(0xff5F33E1),
       ),
       onPressed: () async {
@@ -41,13 +41,16 @@ class LogoutButton extends StatelessWidget {
           ),
           actions: [
             TextButton(
-              onPressed: () => Navigator.of(context).pop(false), // Cancel
-              child: const Text('Cancel'),
+              onPressed: () => Navigator.of(context).pop(false),
+              child: const Text(
+                'Cancel',
+                style: TextStyle(color: Color(0xff5F33E1)),
+              ),
             ),
             ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(true), // Confirm
+              onPressed: () => Navigator.of(context).pop(true),
               style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).colorScheme.primary,
+                backgroundColor: const Color(0xff5F33E1),
               ),
               child: const Text(
                 'Logout',

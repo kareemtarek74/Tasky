@@ -30,8 +30,8 @@ class CustomSnackbar {
                 textColor: Colors.white,
               )
             : null,
-        behavior: SnackBarBehavior.floating, // Optional for modern design
-        margin: const EdgeInsets.all(16), // Add margin for floating effect
+        behavior: SnackBarBehavior.floating,
+        margin: const EdgeInsets.all(16),
         duration: const Duration(seconds: 4),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),

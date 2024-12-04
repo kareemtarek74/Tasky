@@ -1,14 +1,14 @@
 class EndPoints {
   static String baseUrl = 'https://todo.iraqsapp.com';
-  static String register = '$baseUrl/auth/register';
-  static String login = '$baseUrl/auth/login';
-  static String logout = '$baseUrl/auth/logout';
-  static String getProfile = '$baseUrl/auth/profile';
-  static String refreshToken = '$baseUrl/auth/refresh-token';
-  static String uploadImage = '$baseUrl/upload/image';
-  static String createTask = '$baseUrl/todos';
-  static String getTasksList = '$baseUrl/todos';
-  static String getTaskDetails = '$baseUrl/todos/';
+  static String register = '/auth/register';
+  static String login = '/auth/login';
+  static String logout = '/auth/logout';
+  static String getProfile = '/auth/profile';
+  static String refreshToken = '/auth/refresh-token';
+  static String uploadImage = '/upload/image';
+  static String createTask = '/todos';
+  static String getTasksList = '/todos';
+  static String getTaskDetails = '/todos/';
 }
 
 class ApiKeys {

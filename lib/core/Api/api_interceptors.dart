@@ -18,16 +18,19 @@ class ApiInterceptors extends Interceptor {
   @override
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
-    final accessToken = sharedPreferences.getString(ApiKeys.accessToken);
-    if (accessToken != null && accessToken.isNotEmpty) {
-      options.headers['Authorization'] = 'Bearer $accessToken';
+    if (options.path != EndPoints.login) {
+      final accessToken = sharedPreferences.getString(ApiKeys.accessToken);
+      if (accessToken != null && accessToken.isNotEmpty) {
+        options.headers['Authorization'] = 'Bearer $accessToken';
+      }
     }
     super.onRequest(options, handler);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    if (err.response?.statusCode == 401) {
+    if (err.response?.statusCode == 401 &&
+        err.requestOptions.path != EndPoints.login) {
       final cubit = getIt<AuthCubitCubit>();
       await cubit.refreshToken();
 
