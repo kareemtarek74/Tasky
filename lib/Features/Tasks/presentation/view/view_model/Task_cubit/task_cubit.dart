@@ -30,7 +30,6 @@ class TaskCubit extends Cubit<TaskState> {
       : super(TaskInitial()) {
     prioritySelected = "medium";
     statusSelected = 'waiting';
-    statusSelected = ApiKeys.waitingStatue;
   }
 
   String? prioritySelected;
@@ -58,18 +57,6 @@ class TaskCubit extends Cubit<TaskState> {
   List<CreateTaskEntity> inPogress = [];
   List<CreateTaskEntity> waiting = [];
   List<CreateTaskEntity> finished = [];
-
-  CreateTaskEntity detailedTask = CreateTaskEntity(
-      imge: '',
-      tiTle: '',
-      decription: '',
-      prior: '',
-      statue: '',
-      userId: '',
-      taskId: '',
-      createAt: DateTime.now(),
-      updateAt: DateTime.now(),
-      V: 0);
 
   final Map<String, Color> flagColors = {
     "Low Priority": const Color(0xFF0087FF),
@@ -234,7 +221,6 @@ class TaskCubit extends Cubit<TaskState> {
     response.fold((error) {
       emit(GetTaskDetailsErrorState(errorMessage: error));
     }, (task) {
-      detailedTask = task;
       editTitleController.text = task.tiTle.toString();
       editDescriptionController.text = task.decription.toString();
       emit(GetTaskDetailsSuccessState(task: task));

@@ -14,7 +14,7 @@ class ProfileInfoRepoImpl extends ProfileInfoRepo {
   Future<Either<String, ProfileInfoEntity>> getProfileInfo() async {
     try {
       final response = await apiConsumer.get(EndPoints.getProfile);
-      print(response);
+
       return right(ProfileInfoModel.fromJson(response));
     } on ServerException catch (e) {
       return left(e.errorModel.message);
