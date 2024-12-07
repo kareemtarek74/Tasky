@@ -18,9 +18,9 @@ class CustomDropdown extends StatelessWidget {
         return [
           PopupMenuItem<String>(
             onTap: () async {
+              await BlocProvider.of<TaskCubit>(context).getTaskDetails(iD: id);
               Navigator.pushNamed(context, EditTaskView.routeName,
                   arguments: id);
-              await BlocProvider.of<TaskCubit>(context).getTaskDetails(iD: id);
             },
             value: 'edit',
             padding: EdgeInsets.zero,

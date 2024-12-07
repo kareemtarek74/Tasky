@@ -16,9 +16,11 @@ class PriorityDropdown extends StatelessWidget {
 
     return BlocBuilder<TaskCubit, TaskState>(
       builder: (context, state) {
-        String selectedPriority = "Medium Priority";
-        Color flagColor = const Color(0xFF5F33E1);
-        Color fieldColor = const Color(0xFFF4F0FF);
+        String selected =
+            BlocProvider.of<TaskCubit>(context).detailedTask.prior.toString();
+        String selectedPriority = apiToDisplay[selected].toString();
+        Color flagColor = flagColors[selected] ?? const Color(0xFF5F33E1);
+        Color fieldColor = fieldColors[selected] ?? const Color(0xFFF4F0FF);
 
         if (state is TaskPriorityUpdated) {
           selectedPriority = state.selectedPriority;
@@ -34,7 +36,9 @@ class PriorityDropdown extends StatelessWidget {
           ),
           child: DropdownButton<String>(
             padding: EdgeInsets.zero,
-            value: selectedPriority,
+            value: priorities.contains(selectedPriority)
+                ? selectedPriority
+                : "Medium Priority",
             isExpanded: true,
             underline: const SizedBox(),
             icon: Icon(
@@ -76,3 +80,21 @@ class PriorityDropdown extends StatelessWidget {
     );
   }
 }
+
+final Map<String, String> apiToDisplay = {
+  "low": "Low Priority",
+  "medium": "Medium Priority",
+  "high": "High Priority",
+};
+
+final Map<String, Color> flagColors = {
+  "low": const Color(0xFF0087FF),
+  "medium": const Color(0xFF5F33E1),
+  "high": const Color(0xFFFF7D53),
+};
+
+final Map<String, Color> fieldColors = {
+  "low": const Color(0xFFEAF5FF),
+  "medium": const Color(0xFFF4F0FF),
+  "high": const Color(0xFFFFEEE8),
+};

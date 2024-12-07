@@ -19,9 +19,12 @@ class StateDropdown extends StatelessWidget {
 
     return BlocBuilder<TaskCubit, TaskState>(
       builder: (context, state) {
-        String selectedState = "Waiting";
-        Color fieldColor = const Color(0xFFFFE4F2);
-        Color statusColor = const Color(0xFFFF7D53);
+        String selected =
+            BlocProvider.of<TaskCubit>(context).detailedTask.statue.toString();
+        String selectedState = statusApiToDisplay[selected].toString();
+        Color fieldColor =
+            statusFieldColors[selected] ?? const Color(0xFFFFE4F2);
+        Color statusColor = statusColors[selected] ?? const Color(0xFFFF7D53);
 
         if (state is TaskStatusUpdated) {
           selectedState = state.selectedStatus;
@@ -37,7 +40,7 @@ class StateDropdown extends StatelessWidget {
           ),
           child: DropdownButton<String>(
             padding: EdgeInsets.zero,
-            value: selectedState,
+            value: status.contains(selectedState) ? selectedState : "Waiting",
             isExpanded: true,
             underline: const SizedBox(),
             icon: Icon(
@@ -75,8 +78,20 @@ class StateDropdown extends StatelessWidget {
   }
 }
 
-final Map<String, String> statusDisplayToApi = {
-  "Waiting": ApiKeys.waitingStatue,
-  "In Progress": ApiKeys.progressStatue,
-  "Finished": ApiKeys.finishedStatue,
+final Map<String, String> statusApiToDisplay = {
+  ApiKeys.waitingStatue: "Waiting",
+  ApiKeys.progressStatue: "In Progress",
+  ApiKeys.finishedStatue: "Finished",
+};
+
+final Map<String, Color> statusColors = {
+  ApiKeys.finishedStatue: const Color(0xFF0087FF),
+  ApiKeys.progressStatue: const Color(0xFF5F33E1),
+  ApiKeys.waitingStatue: const Color(0xFFFF7D53),
+};
+
+final Map<String, Color> statusFieldColors = {
+  ApiKeys.waitingStatue: const Color(0xFFFFE4F2),
+  ApiKeys.progressStatue: const Color(0xFFF0ECFF),
+  ApiKeys.finishedStatue: const Color(0xFFE3F2FF),
 };

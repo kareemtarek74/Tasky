@@ -32,12 +32,23 @@ class TaskCubit extends Cubit<TaskState> {
     statusSelected = 'waiting';
   }
 
+  CreateTaskEntity detailedTask = CreateTaskEntity(
+      tiTle: '',
+      decription: '',
+      imge: '',
+      statue: '',
+      prior: '',
+      taskId: '',
+      userId: '',
+      V: 0,
+      createAt: DateTime.now(),
+      updateAt: DateTime.now());
+
   String? prioritySelected;
   String? statusSelected;
   XFile? image;
   String? uploadedImage;
   int indexNumSelected = 0;
-
   final createTaskFormKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -221,6 +232,9 @@ class TaskCubit extends Cubit<TaskState> {
     response.fold((error) {
       emit(GetTaskDetailsErrorState(errorMessage: error));
     }, (task) {
+      detailedTask = task;
+      statusSelected = task.statue;
+      prioritySelected = task.prior;
       editTitleController.text = task.tiTle.toString();
       editDescriptionController.text = task.decription.toString();
       emit(GetTaskDetailsSuccessState(task: task));
