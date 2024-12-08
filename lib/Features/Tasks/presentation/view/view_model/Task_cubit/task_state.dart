@@ -131,3 +131,5 @@ class DeleteTaskErrorState extends TaskState {
 
   const DeleteTaskErrorState({required this.errorMessage});
 }
+
+class GetTasksListLoadingMoreState extends TaskState {}

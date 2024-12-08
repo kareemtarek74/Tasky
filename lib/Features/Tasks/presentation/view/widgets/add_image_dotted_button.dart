@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddImageButton extends StatelessWidget {
   final Function(XFile? image) onImageSelected;
   final String title;
 
-  const AddImageButton(
-      {super.key, required this.onImageSelected, required this.title});
+  const AddImageButton({
+    super.key,
+    required this.onImageSelected,
+    required this.title,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +33,10 @@ class AddImageButton extends StatelessWidget {
             color: Color(0xFF5F33E1),
             size: 24,
           ),
-          label: Text(title,
-              style: const TextStyle(color: Color(0xFF5F33E1), fontSize: 16)),
+          label: Text(
+            title,
+            style: const TextStyle(color: Color(0xFF5F33E1), fontSize: 16),
+          ),
           style: TextButton.styleFrom(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12),
@@ -81,8 +89,36 @@ class AddImageButton extends StatelessWidget {
         await picker.pickImage(source: source, imageQuality: 20);
 
     if (pickedImage != null) {
-      onImageSelected(pickedImage);
-      print(pickedImage);
+      final XFile? compressedImage = await _compressImage(pickedImage);
+
+      if (compressedImage != null) {
+        onImageSelected(compressedImage);
+      } else {
+        onImageSelected(pickedImage);
+      }
+    }
+  }
+
+  Future<XFile?> _compressImage(XFile xfile) async {
+    try {
+      final File originalFile = File(xfile.path);
+      final String compressedPath =
+          '${originalFile.parent.path}/compressed_${originalFile.uri.pathSegments.last}';
+
+      final XFile? compressedFile =
+          await FlutterImageCompress.compressAndGetFile(
+        originalFile.absolute.path,
+        compressedPath,
+        quality: 10,
+      );
+
+      if (compressedFile != null) {
+        return XFile(compressedFile.path);
+      } else {
+        return null;
+      }
+    } catch (e) {
+      return null;
     }
   }
 }

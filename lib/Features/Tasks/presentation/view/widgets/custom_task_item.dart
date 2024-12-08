@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -39,16 +40,16 @@ class CustomTaskItem extends StatelessWidget {
                 height: 64,
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: Container(
-                    decoration: ShapeDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(
-                            "https://todo.iraqsapp.com/images/${task.imge.toString()}"),
-                        fit: BoxFit.cover,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(63.37),
-                      ),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(63.37),
+                    child: CachedNetworkImage(
+                      imageUrl:
+                          "https://todo.iraqsapp.com/images/${task.imge.toString()}",
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                      fit: BoxFit.cover,
                     ),
                   ),
                 ),

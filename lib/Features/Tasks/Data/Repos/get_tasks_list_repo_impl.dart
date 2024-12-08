@@ -10,10 +10,13 @@ class GetTasksListRepoImpl extends GetTasksListRepo {
   final ApiConsumer apiConsumer;
 
   GetTasksListRepoImpl({required this.apiConsumer});
+
   @override
-  Future<Either<String, List<CreateTaskEntity>>> getTasksList() async {
+  Future<Either<String, List<CreateTaskEntity>>> getTasksList(
+      {int page = 1}) async {
     try {
-      final response = await apiConsumer.get(EndPoints.getTasksList);
+      final response =
+          await apiConsumer.get('${EndPoints.getTasksList}?page=$page');
       List<CreateTaskEntity> result = [];
       for (var task in response) {
         result.add(CreateTaskModel.fromJson(task));

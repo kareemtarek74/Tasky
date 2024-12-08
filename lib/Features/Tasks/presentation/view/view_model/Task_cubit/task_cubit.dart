@@ -64,6 +64,10 @@ class TaskCubit extends Cubit<TaskState> {
     emit(TaskAutovalidateModeUpdated(autovalidateMode));
   }
 
+  int currentPage = 1;
+  bool isLoadingMore = false;
+  bool hasMoreData = true;
+
   List<CreateTaskEntity> allTasks = [];
   List<CreateTaskEntity> inPogress = [];
   List<CreateTaskEntity> waiting = [];
@@ -196,34 +200,66 @@ class TaskCubit extends Cubit<TaskState> {
     });
   }
 
-  Future<void> getTasksList() async {
-    emit(GetTasksListLoadingState());
-    allTasks.clear();
-    inPogress.clear();
-    waiting.clear();
-    finished.clear();
+  Future<void> getTasksList({bool loadMore = false}) async {
+    if (loadMore) {
+      if (!hasMoreData || isLoadingMore) return;
+      isLoadingMore = true;
+      emit(GetTasksListLoadingMoreState());
+    } else {
+      emit(GetTasksListLoadingState());
+      allTasks.clear();
+      inPogress.clear();
+      waiting.clear();
+      finished.clear();
+      currentPage = 1;
+      hasMoreData = true;
+    }
 
-    final response = await getTasksListRepo.getTasksList();
+    final response = await getTasksListRepo.getTasksList(page: currentPage);
     response.fold((error) {
+      if (loadMore) {
+        isLoadingMore = false;
+      }
       emit(GetTasksListErrorState(errorMessage: error));
     }, (tasksListEntity) {
-      for (var tasks in tasksListEntity) {
-        allTasks.add(tasks);
-        switch (tasks.statue) {
-          case "inProgress":
-            inPogress.add(tasks);
-            break;
-          case "waiting":
-            waiting.add(tasks);
-            break;
-          case "finished":
-            finished.add(tasks);
-            break;
-          default:
+      if (loadMore) {
+        isLoadingMore = false;
+        if (tasksListEntity.isEmpty || tasksListEntity.length < 20) {
+          hasMoreData = false;
+        }
+        // تحديث جميع القوائم
+        allTasks.addAll(tasksListEntity);
+        for (var task in tasksListEntity) {
+          _addToSpecificList(task);
+        }
+      } else {
+        // تحديث جميع القوائم عند التحديث الكامل
+        allTasks = tasksListEntity;
+        hasMoreData = tasksListEntity.length == 20;
+        for (var task in tasksListEntity) {
+          _addToSpecificList(task);
         }
       }
+
+      currentPage++;
       emit(GetTasksListSuccessState());
     });
+  }
+
+  void _addToSpecificList(CreateTaskEntity task) {
+    switch (task.statue) {
+      case "inProgress":
+        inPogress.add(task);
+        break;
+      case "waiting":
+        waiting.add(task);
+        break;
+      case "finished":
+        finished.add(task);
+        break;
+      default:
+        break;
+    }
   }
 
   Future<void> getTaskDetails({required String iD}) async {

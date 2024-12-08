@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:tasky/Features/Tasks/Domain/Entities/create_task_entity.dart';
@@ -19,11 +20,17 @@ class CustomTaskDetailsBody extends StatelessWidget {
       children: [
         AspectRatio(
           aspectRatio: 4 / 3,
-          child: Image(
-              width: double.infinity,
-              fit: BoxFit.fill,
-              image: NetworkImage(
-                  "https://todo.iraqsapp.com/images/${task.imge}")),
+          child: CachedNetworkImage(
+            width: double.infinity,
+            fit: BoxFit.fill,
+            imageUrl: "https://todo.iraqsapp.com/images/${task.imge}",
+            placeholder: (context, url) => const Center(
+              child: CircularProgressIndicator(),
+            ),
+            errorWidget: (context, url, error) => const Center(
+              child: Icon(Icons.error, size: 40, color: Colors.red),
+            ),
+          ),
         ),
         const SizedBox(
           height: 16,
