@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
-import 'package:tasky/Features/Auth/presentation/views/sign_in_view.dart';
 import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
-import 'package:tasky/Features/intro/presentation/views/intro_view.dart';
-import 'package:tasky/constants.dart';
 import 'package:tasky/core/helper_functions/onGenerate_function.dart';
 import 'package:tasky/core/services/get_it_service.dart';
-import 'package:tasky/core/services/shared_preferences_singleton.dart';
+import 'package:tasky/core/services/initial_route_service.dart';
 import 'package:tasky/core/utils/app_colors.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await setup();
-  await Prefs.init();
-
-  runApp(const TaskyApp());
+  final initialRoute = await determineInitialRoute();
+  runApp(TaskyApp(initialRoute: initialRoute));
 }
 
 class TaskyApp extends StatelessWidget {
-  const TaskyApp({super.key});
+  final String initialRoute;
+  const TaskyApp({super.key, required this.initialRoute});
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +25,8 @@ class TaskyApp extends StatelessWidget {
           create: (context) => getIt<AuthCubitCubit>(),
         ),
         BlocProvider(
-          create: (context) => getIt<TaskCubit>(),
-        )
+          create: (context) => getIt<TaskCubit>()..getTasksList(),
+        ),
       ],
       child: MaterialApp(
         theme: ThemeData(
@@ -39,9 +35,7 @@ class TaskyApp extends StatelessWidget {
         ),
         debugShowCheckedModeBanner: false,
         onGenerateRoute: onGenerateRoute,
-        initialRoute: Prefs.getBool(kIsIntroViewSeen)
-            ? SignInView.routeName
-            : IntroView.routeName,
+        initialRoute: initialRoute,
       ),
     );
   }
