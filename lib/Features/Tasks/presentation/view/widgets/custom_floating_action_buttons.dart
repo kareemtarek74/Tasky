@@ -49,7 +49,10 @@ class CustomFloatingButtons extends StatelessWidget {
                 height: 64,
                 child: FloatingActionButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, AddTaskView.routeName);
+                    Navigator.pushNamed(
+                      context,
+                      AddTaskView.routeName,
+                    );
                   },
                   backgroundColor: const Color(0xFF5F33E1),
                   heroTag: 'addTaskButton',

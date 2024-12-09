@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tasky/Features/Tasks/presentation/view/edit_task_view.dart';
 import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
 import 'package:tasky/core/text_styles.dart';
+import 'package:tasky/core/widgets/delete_confirmation_dialog.dart';
 
 class CustomDropdown extends StatelessWidget {
   const CustomDropdown({super.key, this.iconSize = 24, required this.id});
@@ -49,48 +50,7 @@ class CustomDropdown extends StatelessWidget {
           PopupMenuItem<String>(
             onTap: () {
               Future.delayed(Duration.zero, () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text(
-                        "Confirm Delete",
-                        style: Styles.styleBold24(context),
-                      ),
-                      content: Text(
-                        "Are you sure you wanna delete this task?",
-                        style: Styles.styleMedium16(context)
-                            .copyWith(color: Colors.black),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text(
-                            "Cancel",
-                            style: TextStyle(color: Color(0xFFFF7D53)),
-                          ),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            BlocProvider.of<TaskCubit>(context)
-                                .deleteTask(id: id);
-                            BlocProvider.of<TaskCubit>(context).getTasksList();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFFF7D53),
-                          ),
-                          child: const Text(
-                            "Delete",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    );
-                  },
-                );
+                showDeleteConfirmationDialog(context, id);
               });
             },
             value: 'delete',

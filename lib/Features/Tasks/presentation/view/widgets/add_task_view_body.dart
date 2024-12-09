@@ -30,7 +30,7 @@ class _AddTaskViewBodyState extends State<AddTaskViewBody> {
       listener: (context, state) {
         if (state is CreateTaskSuccessState) {
           Navigator.pop(context);
-          BlocProvider.of<TaskCubit>(context).getTasksList();
+
           Navigator.pushNamedAndRemoveUntil(
               context, HomeView.routeName, (route) => false);
         } else if (state is UploadImageErrorState) {
