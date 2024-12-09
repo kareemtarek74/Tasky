@@ -16,7 +16,7 @@ class TaskyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AuthProvider(
+    return AuthCubitProvider(
       child: MaterialApp(
         theme: ThemeData(
           fontFamily: 'DM Sans',
