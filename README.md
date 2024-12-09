@@ -1,6 +1,24 @@
 # tasky
 
-A new Flutter project.
+🎯 About Tasky
+A task management app designed with engineers in mind. Whether you're managing project deadlines, tracking progress, or organizing daily tasks, Tasky provides the structure and efficiency you need to stay on top of your workload.
+
+🛠 Key Features for Engineers:
+✅ Engaging splash and onboarding screens to get started effortlessly.
+✅ Modern and secure login/signup flows with JWT-based authentication.
+✅ Robust task management with detailed views and QR code integration for easy sharing and tracking.
+✅ QR Code Functionality: Generate and scan task-related QR codes for streamlined collaboration.
+✅ Fully responsive UI optimized for engineers working across devices.
+
+📐 Technical Highlights:
+
+Built with Flutter, following Clean Architecture for scalability and maintainability.
+Efficient state management powered by Cubit.
+Integrated refresh token handling to ensure secure and seamless sessions.
+Precision design to match UI mockups for a polished look.
+Engineered for high performance to handle demanding workflows.
+💡 Why Tasky for Engineers?
+Engineers juggle multiple priorities daily, and Tasky simplifies task management with features tailored to their needs. It’s not just a tool; it’s your productivity partner.
 
 ## Getting Started
 
