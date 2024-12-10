@@ -27,7 +27,7 @@ class AddImageButton extends StatelessWidget {
         height: 56,
         width: double.infinity,
         child: TextButton.icon(
-          onPressed: () => _showImageSourceDialog(context),
+          onPressed: () => showImageSourceDialog(context),
           icon: const Icon(
             Icons.add_photo_alternate_outlined,
             color: Color(0xFF5F33E1),
@@ -50,7 +50,7 @@ class AddImageButton extends StatelessWidget {
     );
   }
 
-  void _showImageSourceDialog(BuildContext context) {
+  void showImageSourceDialog(BuildContext context) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -64,7 +64,7 @@ class AddImageButton extends StatelessWidget {
                 title: const Text('Camera'),
                 onTap: () {
                   Navigator.pop(context);
-                  _pickImage(context, ImageSource.camera);
+                  pickImage(context, ImageSource.camera);
                 },
               ),
               ListTile(
@@ -73,7 +73,7 @@ class AddImageButton extends StatelessWidget {
                 title: const Text('Gallery'),
                 onTap: () {
                   Navigator.pop(context);
-                  _pickImage(context, ImageSource.gallery);
+                  pickImage(context, ImageSource.gallery);
                 },
               ),
             ],
@@ -83,13 +83,13 @@ class AddImageButton extends StatelessWidget {
     );
   }
 
-  Future<void> _pickImage(BuildContext context, ImageSource source) async {
+  Future<void> pickImage(BuildContext context, ImageSource source) async {
     final ImagePicker picker = ImagePicker();
     final XFile? pickedImage =
         await picker.pickImage(source: source, imageQuality: 20);
 
     if (pickedImage != null) {
-      final XFile? compressedImage = await _compressImage(pickedImage);
+      final XFile? compressedImage = await compressImage(pickedImage);
 
       if (compressedImage != null) {
         onImageSelected(compressedImage);
@@ -99,7 +99,7 @@ class AddImageButton extends StatelessWidget {
     }
   }
 
-  Future<XFile?> _compressImage(XFile xfile) async {
+  Future<XFile?> compressImage(XFile xfile) async {
     try {
       final File originalFile = File(xfile.path);
       final String compressedPath =

@@ -6,12 +6,16 @@ import 'package:tasky/Features/Auth/Domain/repos/login_repo.dart';
 import 'package:tasky/core/Api/api_consumer.dart';
 import 'package:tasky/core/Api/end_points.dart';
 import 'package:tasky/core/Errors/exceptions.dart';
+import 'package:tasky/core/utils/login_response_validator.dart';
 
 class LoginRepoImpl extends LoginRepo {
   final ApiConsumer apiConsumer;
   final SharedPreferences sharedPreferences;
 
-  LoginRepoImpl({required this.apiConsumer, required this.sharedPreferences});
+  LoginRepoImpl({
+    required this.apiConsumer,
+    required this.sharedPreferences,
+  });
 
   @override
   Future<Either<String, LoginEntity>> loginUser({
@@ -24,25 +28,29 @@ class LoginRepoImpl extends LoginRepo {
         data: {ApiKeys.phone: phone, ApiKeys.password: password},
       );
 
-      if (!response.containsKey(ApiKeys.accessToken) ||
-          !response.containsKey(ApiKeys.refreshToken)) {
-        if (response.containsKey('message')) {
-          return left(response['message']);
-        }
-        return left('Invalid login response: Missing tokens.');
-      }
+      final validationResult =
+          LoginResponseValidator.validateResponse(response);
 
-      final accessToken = response[ApiKeys.accessToken];
-      final refreshToken = response[ApiKeys.refreshToken];
+      return validationResult.fold(
+        (error) => left(error),
+        (validResponse) async {
+          final accessToken = validResponse[ApiKeys.accessToken];
+          final refreshToken = validResponse[ApiKeys.refreshToken];
 
-      await sharedPreferences.setString(ApiKeys.accessToken, accessToken);
-      await sharedPreferences.setString(ApiKeys.refreshToken, refreshToken);
+          await storeTokens(accessToken, refreshToken);
 
-      return right(LoginModel.fromJson(response));
+          return right(LoginModel.fromJson(validResponse));
+        },
+      );
     } on ServerException catch (e) {
       return left(e.errorModel.message);
     } catch (e) {
       return left('Unexpected error occurred during login.');
     }
+  }
+
+  Future<void> storeTokens(String accessToken, String refreshToken) async {
+    await sharedPreferences.setString(ApiKeys.accessToken, accessToken);
+    await sharedPreferences.setString(ApiKeys.refreshToken, refreshToken);
   }
 }

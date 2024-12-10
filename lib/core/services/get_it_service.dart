@@ -74,7 +74,6 @@ Future<void> setup() async {
   getIt.registerLazySingleton<LogoutRepo>(
     () => LogoutRepoImpl(
       apiConsumer: getIt(),
-      dioConsumer: getIt(),
       sharedPreferences: getIt(),
     ),
   );

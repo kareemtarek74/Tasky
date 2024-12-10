@@ -17,13 +17,16 @@ class GetTasksListRepoImpl extends GetTasksListRepo {
     try {
       final response =
           await apiConsumer.get('${EndPoints.getTasksList}?page=$page');
-      List<CreateTaskEntity> result = [];
-      for (var task in response) {
-        result.add(CreateTaskModel.fromJson(task));
-      }
-      return right(result);
+      final tasks = TaskMapper.fromJsonList(response);
+      return right(tasks);
     } on ServerException catch (e) {
       return left(e.errorModel.message);
     }
+  }
+}
+
+class TaskMapper {
+  static List<CreateTaskEntity> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((task) => CreateTaskModel.fromJson(task)).toList();
   }
 }

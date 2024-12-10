@@ -6,20 +6,26 @@ import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
 import 'package:tasky/core/Api/api_consumer.dart';
 import 'package:tasky/core/Api/end_points.dart';
 import 'package:tasky/core/Errors/exceptions.dart';
+import 'package:tasky/core/utils/register_response_validator.dart';
 
 class RegisterRepoImpl extends RegisterRepo {
   final ApiConsumer apiConsumer;
   final SharedPreferences preferences;
 
-  RegisterRepoImpl({required this.preferences, required this.apiConsumer});
+  RegisterRepoImpl({
+    required this.preferences,
+    required this.apiConsumer,
+  });
+
   @override
-  Future<Either<String, RegisterEntity>> registerUser(
-      {String? name,
-      String? phone,
-      String? password,
-      num? yearsOfExperience,
-      String? experienceLevel,
-      String? address}) async {
+  Future<Either<String, RegisterEntity>> registerUser({
+    String? name,
+    String? phone,
+    String? password,
+    num? yearsOfExperience,
+    String? experienceLevel,
+    String? address,
+  }) async {
     try {
       final response = await apiConsumer.post(
         EndPoints.register,
@@ -32,21 +38,21 @@ class RegisterRepoImpl extends RegisterRepo {
           ApiKeys.level: experienceLevel,
         },
       );
-      if (response.containsKey('message')) {
-        final errorMessage = response['message'] ?? 'Unknown error occurred';
-        return left(errorMessage);
-      }
 
-      final accessToken = response[ApiKeys.accessToken];
-      final refreshToken = response[ApiKeys.refreshToken];
+      final validationResult =
+          RegisterResponseValidator.validateResponse(response);
+      return validationResult.fold(
+        (error) => left(error),
+        (validResponse) async {
+          final accessToken = validResponse[ApiKeys.accessToken];
+          final refreshToken = validResponse[ApiKeys.refreshToken];
 
-      if (accessToken == null || refreshToken == null) {
-        return left('Invalid registration response: Missing tokens.');
-      }
+          await preferences.setString(ApiKeys.accessToken, accessToken);
+          await preferences.setString(ApiKeys.refreshToken, refreshToken);
 
-      await preferences.setString(ApiKeys.accessToken, accessToken);
-      await preferences.setString(ApiKeys.refreshToken, refreshToken);
-      return right(RegisterModel.fromJson(response));
+          return right(RegisterModel.fromJson(validResponse));
+        },
+      );
     } on ServerException catch (e) {
       return left(e.errorModel.message);
     }

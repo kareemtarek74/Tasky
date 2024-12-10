@@ -159,12 +159,10 @@ class TaskCubit extends Cubit<TaskState> {
 
       response.fold(
         (error) {
-          debugPrint('خطأ أثناء رفع الصورة: $error');
           emit(UploadImageErrorState(errorMessage: error));
         },
         (imageEntity) {
           uploadedImage = imageEntity.imagePath;
-          debugPrint('تم رفع الصورة بنجاح: $uploadedImage');
           emit(UploadImageSuccessState());
         },
       );
@@ -227,13 +225,11 @@ class TaskCubit extends Cubit<TaskState> {
         if (tasksListEntity.isEmpty || tasksListEntity.length < 20) {
           hasMoreData = false;
         }
-        // تحديث جميع القوائم
         allTasks.addAll(tasksListEntity);
         for (var task in tasksListEntity) {
           _addToSpecificList(task);
         }
       } else {
-        // تحديث جميع القوائم عند التحديث الكامل
         allTasks = tasksListEntity;
         hasMoreData = tasksListEntity.length == 20;
         for (var task in tasksListEntity) {
