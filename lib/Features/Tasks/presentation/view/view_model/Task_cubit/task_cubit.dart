@@ -289,7 +289,7 @@ class TaskCubit extends Cubit<TaskState> {
     }, (taskEdited) {
       image = null;
       uploadedImage = null;
-      getTaskDetails(iD: id);
+
       emit(EditTaskSuccessState());
     });
   }
