@@ -69,13 +69,43 @@ class EditTaskViewBody extends StatelessWidget {
                             buildStatusSelector(context),
                             const SizedBox(height: 28.5),
                             CustomButton(
-                              text: 'Edit task',
-                              style: Styles.styleBold19(context),
-                              hasIcon: false,
-                              onPressed: () async {
-                                await onEditTaskPressed(taskCubit);
-                              },
-                            ),
+                                text: 'Edit task',
+                                style: Styles.styleBold19(context),
+                                hasIcon: false,
+                                onPressed: () async {
+                                  final taskCubit =
+                                      BlocProvider.of<TaskCubit>(context);
+
+                                  final isValid = taskCubit
+                                      .editTaskFormKey.currentState!
+                                      .validate();
+                                  if (!isValid) {
+                                    taskCubit.updateAutovalidateMode(
+                                        AutovalidateMode.always);
+                                    return;
+                                  }
+
+                                  if (taskCubit.image != null &&
+                                      taskCubit.uploadedImage == null) {
+                                    await taskCubit.uploadImage();
+                                  }
+
+                                  final Map<String, dynamic> taskDetails = {
+                                    "title": taskCubit.editTitleController.text,
+                                    "desc": taskCubit
+                                        .editDescriptionController.text,
+                                    "priority": taskCubit.prioritySelected,
+                                    "status": taskCubit.statusSelected,
+                                  };
+
+                                  if (taskCubit.uploadedImage != null) {
+                                    taskDetails["image"] =
+                                        taskCubit.uploadedImage;
+                                  }
+
+                                  await taskCubit.editTask(
+                                      id: id, taskDetails: taskDetails);
+                                }),
                             const SizedBox(height: 22),
                           ],
                         ),
@@ -102,25 +132,5 @@ class EditTaskViewBody extends StatelessWidget {
         StateDropdown(id: id),
       ],
     );
-  }
-
-  Future<void> onEditTaskPressed(TaskCubit taskCubit) async {
-    final isValid = taskCubit.editTaskFormKey.currentState!.validate();
-    if (!isValid) {
-      taskCubit.updateAutovalidateMode(AutovalidateMode.always);
-      return;
-    }
-    if (taskCubit.image != null && taskCubit.uploadedImage == null) {
-      await taskCubit.uploadImage();
-    }
-    if (taskCubit.uploadedImage != null || taskCubit.image == null) {
-      await taskCubit.editTask(id: id, taskDetails: {
-        "title": taskCubit.editTitleController.text,
-        "desc": taskCubit.editDescriptionController.text,
-        "image": taskCubit.uploadedImage,
-        "priority": taskCubit.prioritySelected,
-        "status": taskCubit.statusSelected,
-      });
-    }
   }
 }
