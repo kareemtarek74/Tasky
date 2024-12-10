@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tasky/Features/Auth/Data/Data_Sources/remote/profile_info_remote_data_source.dart';
 import 'package:tasky/Features/Auth/Data/repos/login_repo_impl.dart';
 import 'package:tasky/Features/Auth/Data/repos/logout_repo_impl.dart';
 import 'package:tasky/Features/Auth/Data/repos/profile_info_repo_impl.dart';
@@ -11,7 +12,14 @@ import 'package:tasky/Features/Auth/Domain/repos/logout_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/profile_info_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
 import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
+import 'package:tasky/Features/Auth/Domain/usecases/login_usecase.dart';
+import 'package:tasky/Features/Auth/Domain/usecases/logout_usecase.dart';
+import 'package:tasky/Features/Auth/Domain/usecases/profile_info_usecase.dart';
+import 'package:tasky/Features/Auth/Domain/usecases/refresh_token_usecase.dart';
+import 'package:tasky/Features/Auth/Domain/usecases/register_usecase.dart';
 import 'package:tasky/Features/Auth/presentation/view_model/auth_cubit.dart';
+import 'package:tasky/Features/Tasks/Data/Data_Sources/Remote/get_task_details_remote_data_source.dart';
+import 'package:tasky/Features/Tasks/Data/Data_Sources/Remote/get_tasks_list_remote_data_source.dart';
 import 'package:tasky/Features/Tasks/Data/Repos/create_task_repo_impl.dart';
 import 'package:tasky/Features/Tasks/Data/Repos/delete_task_repo_impl.dart';
 import 'package:tasky/Features/Tasks/Data/Repos/edit_task_repo_impl.dart';
@@ -24,6 +32,12 @@ import 'package:tasky/Features/Tasks/Domain/Repos/edit_task_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/get_task_details_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/get_tasks_list_repo.dart';
 import 'package:tasky/Features/Tasks/Domain/Repos/upload_image_repo.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/create_task_usecase.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/delete_task_usecase.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/edit_task_usecase.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/get_task_details_usecase.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/get_tasks_list_usecase.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/upload_image_usecase.dart';
 import 'package:tasky/Features/Tasks/presentation/view/view_model/Task_cubit/task_cubit.dart';
 import 'package:tasky/core/Api/api_consumer.dart';
 import 'package:tasky/core/Api/api_interceptors.dart';
@@ -32,10 +46,8 @@ import 'package:tasky/core/Api/dio_consumer.dart';
 final getIt = GetIt.instance;
 
 Future<void> setup() async {
-  // EXTERNALS
   getIt.registerLazySingleton(() => Dio());
 
-  // CORE
   getIt.registerLazySingleton<DioConsumer>(() => DioConsumer(dio: getIt()));
   getIt.registerLazySingleton<ApiConsumer>(() => getIt<DioConsumer>());
 
@@ -47,7 +59,21 @@ Future<void> setup() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   getIt.registerLazySingleton(() => sharedPreferences);
 
-  // REPOSITORIES
+  getIt.registerLazySingleton<ProfileRemoteDataSource>(
+      () => ProfileRemoteDataSourceImpl(
+            apiConsumer: getIt(),
+          ));
+
+  getIt.registerLazySingleton<GetTaskDetailsRemoteDataSource>(
+      () => GetTaskDetailsRemoteDataSourceImpl(
+            apiConsumer: getIt(),
+          ));
+
+  getIt.registerLazySingleton<GetTasksListRemoteDataSource>(
+      () => GetTasksListRemoteDataSourceImpl(
+            apiConsumer: getIt(),
+          ));
+
   getIt.registerLazySingleton<LoginRepo>(
     () => LoginRepoImpl(
       apiConsumer: getIt(),
@@ -62,7 +88,7 @@ Future<void> setup() async {
   );
   getIt.registerLazySingleton<ProfileInfoRepo>(
     () => ProfileInfoRepoImpl(
-      apiConsumer: getIt(),
+      profileRemoteDataSource: getIt(),
     ),
   );
   getIt.registerLazySingleton<RefreshTokenRepo>(
@@ -78,14 +104,39 @@ Future<void> setup() async {
     ),
   );
 
-  // BLOCS
+  getIt.registerLazySingleton<LoginUsecase>(
+    () => LoginUsecase(
+      loginRepo: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton<RegisterUsecase>(
+    () => RegisterUsecase(
+      registerRepo: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton<ProfileInfoUsecase>(
+    () => ProfileInfoUsecase(
+      profileInfoRepo: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton<RefreshTokenUsecase>(
+    () => RefreshTokenUsecase(
+      refreshTokenRepo: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton<UserLogoutUsecase>(
+    () => UserLogoutUsecase(
+      logoutRepo: getIt(),
+    ),
+  );
+
   getIt.registerFactory<AuthCubitCubit>(
     () => AuthCubitCubit(
-        loginRepo: getIt(),
-        logoutRepo: getIt(),
-        profileInfoRepo: getIt(),
-        refreshTokenRepo: getIt(),
-        registerRepo: getIt(),
+        loginUsecase: getIt(),
+        userLogoutUsecase: getIt(),
+        profileInfoUsecase: getIt(),
+        refreshTokenUsecase: getIt(),
+        registerUsecase: getIt(),
         sharedPreferences: getIt()),
   );
 
@@ -98,11 +149,11 @@ Future<void> setup() async {
       ));
 
   getIt.registerLazySingleton<GetTasksListRepo>(() => GetTasksListRepoImpl(
-        apiConsumer: getIt(),
+        getTasksListRemoteDataSource: getIt(),
       ));
 
   getIt.registerLazySingleton<GetTaskDetailsRepo>(() => GetTaskDetailsRepoImpl(
-        apiConsumer: getIt(),
+        getTaskDetailsRemoteDataSource: getIt(),
       ));
 
   getIt.registerLazySingleton<EditTaskRepo>(() => EditTaskRepoImpl(
@@ -113,14 +164,45 @@ Future<void> setup() async {
         apiConsumer: getIt(),
       ));
 
+  getIt.registerLazySingleton<CreateTaskUseCase>(
+    () => CreateTaskUseCase(
+      createTaskRepo: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton<DeleteTaskUsecase>(
+    () => DeleteTaskUsecase(
+      deleteTaskRepo: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton<EditTaskUsecase>(
+    () => EditTaskUsecase(
+      editTaskRepo: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton<GetTaskDetailsUsecase>(
+    () => GetTaskDetailsUsecase(
+      getTaskDetailsRepo: getIt(),
+    ),
+  );
+  getIt.registerLazySingleton<GetTasksListUsecase>(
+    () => GetTasksListUsecase(
+      getTasksListRepo: getIt(),
+    ),
+  );
+
+  getIt.registerLazySingleton<UploadImageUsecase>(
+    () => UploadImageUsecase(
+      uploadImageRepo: getIt(),
+    ),
+  );
   getIt.registerFactory<TaskCubit>(
     () => TaskCubit(
-      uploadImageRepo: getIt(),
-      createTaskRepo: getIt(),
-      getTasksListRepo: getIt(),
-      getTaskDetailsRepo: getIt(),
-      editTaskRepo: getIt(),
-      deleteTaskRepo: getIt(),
+      uploadImageUsecase: getIt(),
+      createTaskUseCase: getIt(),
+      getTasksListUsecase: getIt(),
+      getTaskDetailsUsecase: getIt(),
+      editTaskUsecase: getIt(),
+      deleteTaskUsecase: getIt(),
     ),
   );
 }

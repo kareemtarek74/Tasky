@@ -1,32 +1,33 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tasky/Features/Auth/Domain/repos/login_repo.dart';
-import 'package:tasky/Features/Auth/Domain/repos/logout_repo.dart';
-import 'package:tasky/Features/Auth/Domain/repos/profile_info_repo.dart';
-import 'package:tasky/Features/Auth/Domain/repos/refresh_token_repo.dart';
-import 'package:tasky/Features/Auth/Domain/repos/register_repo.dart';
+import 'package:tasky/Features/Auth/Domain/usecases/login_usecase.dart';
+import 'package:tasky/Features/Auth/Domain/usecases/logout_usecase.dart';
+import 'package:tasky/Features/Auth/Domain/usecases/profile_info_usecase.dart';
+import 'package:tasky/Features/Auth/Domain/usecases/refresh_token_usecase.dart';
+import 'package:tasky/Features/Auth/Domain/usecases/register_usecase.dart';
 import 'package:tasky/core/Api/end_points.dart';
+import 'package:tasky/core/UseCase/app_usecases.dart';
 
 import 'auth_state.dart';
 
 class AuthCubitCubit extends Cubit<AuthCubitState> {
   int minPhoneLength = 10;
   int maxPhoneLength = 15;
-  final RegisterRepo registerRepo;
-  final LoginRepo loginRepo;
-  final RefreshTokenRepo refreshTokenRepo;
-  final LogoutRepo logoutRepo;
-  final ProfileInfoRepo profileInfoRepo;
+  final LoginUsecase loginUsecase;
+  final RegisterUsecase registerUsecase;
+  final ProfileInfoUsecase profileInfoUsecase;
+  final RefreshTokenUsecase refreshTokenUsecase;
+  final UserLogoutUsecase userLogoutUsecase;
   final SharedPreferences sharedPreferences;
 
   AuthCubitCubit(
       {required this.sharedPreferences,
-      required this.profileInfoRepo,
-      required this.logoutRepo,
-      required this.refreshTokenRepo,
-      required this.loginRepo,
-      required this.registerRepo})
+      required this.profileInfoUsecase,
+      required this.userLogoutUsecase,
+      required this.refreshTokenUsecase,
+      required this.loginUsecase,
+      required this.registerUsecase})
       : super(const AuthCubitInitial());
 
   final registerFormKey = GlobalKey<FormState>();
@@ -64,14 +65,15 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
 
   Future<void> registerUser() async {
     emit(RegisterLoadingState());
-    final response = await registerRepo.registerUser(
-      name: registerNameController.text,
+    final params = RegisterParams(
+      displayName: registerNameController.text,
       phone: registerPhoneController.text,
       password: registerPasswordController.text,
       address: registerAddressController.text,
-      yearsOfExperience: int.tryParse(registerExperienceController.text),
-      experienceLevel: levelSelected,
+      experienceYears: int.tryParse(registerExperienceController.text)!,
+      level: levelSelected.toString(),
     );
+    final response = await registerUsecase.call(params);
     response.fold((error) {
       emit(RegisterErrorState(error));
     }, (userEntity) {
@@ -81,9 +83,10 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
 
   Future<void> loginUser() async {
     emit(LoginLoadingState());
-    final response = await loginRepo.loginUser(
+    final params = LoginParams(
         phone: loginPhoneController.text,
         password: loginPasswordController.text);
+    final response = await loginUsecase.call(params);
 
     response.fold((error) {
       emit(LoginErrorState(error));
@@ -96,7 +99,7 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
     try {
       emit(RefreshTokenLoadingState());
 
-      final refreshResult = await refreshTokenRepo.refreshToken();
+      final refreshResult = await refreshTokenUsecase.call(NoParam());
 
       refreshResult.fold(
         (error) {
@@ -115,7 +118,7 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
   }
 
   Future<void> logoutUser() async {
-    final response = await logoutRepo.logoutUser();
+    final response = await userLogoutUsecase.call(NoParam());
     response.fold((error) {
       emit(LogoutErrorState(errorMessage: error));
     }, (logoutSuccess) {
@@ -125,7 +128,7 @@ class AuthCubitCubit extends Cubit<AuthCubitState> {
 
   Future<void> getProfile() async {
     emit(ProfileInfoLoadingState());
-    final response = await profileInfoRepo.getProfileInfo();
+    final response = await profileInfoUsecase.call(NoParam());
     response.fold((error) {
       emit(ProfileInfoErrorState(error));
     }, (profileEntity) {

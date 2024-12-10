@@ -3,30 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tasky/Features/Tasks/Domain/Entities/create_task_entity.dart';
-import 'package:tasky/Features/Tasks/Domain/Repos/create_task_repo.dart';
-import 'package:tasky/Features/Tasks/Domain/Repos/delete_task_repo.dart';
-import 'package:tasky/Features/Tasks/Domain/Repos/edit_task_repo.dart';
-import 'package:tasky/Features/Tasks/Domain/Repos/get_task_details_repo.dart';
-import 'package:tasky/Features/Tasks/Domain/Repos/get_tasks_list_repo.dart';
-import 'package:tasky/Features/Tasks/Domain/Repos/upload_image_repo.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/create_task_usecase.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/delete_task_usecase.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/edit_task_usecase.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/get_task_details_usecase.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/get_tasks_list_usecase.dart';
+import 'package:tasky/Features/Tasks/Domain/usecases/upload_image_usecase.dart';
 import 'package:tasky/core/Api/end_points.dart';
+import 'package:tasky/core/UseCase/app_usecases.dart';
 
 part 'task_state.dart';
 
 class TaskCubit extends Cubit<TaskState> {
-  final UploadImageRepo uploadImageRepo;
-  final CreateTaskRepo createTaskRepo;
-  final GetTasksListRepo getTasksListRepo;
-  final GetTaskDetailsRepo getTaskDetailsRepo;
-  final EditTaskRepo editTaskRepo;
-  final DeleteTaskRepo deleteTaskRepo;
+  final GetTasksListUsecase getTasksListUsecase;
+  final GetTaskDetailsUsecase getTaskDetailsUsecase;
+  final UploadImageUsecase uploadImageUsecase;
+  final CreateTaskUseCase createTaskUseCase;
+  final DeleteTaskUsecase deleteTaskUsecase;
+  final EditTaskUsecase editTaskUsecase;
   TaskCubit(
-      {required this.deleteTaskRepo,
-      required this.editTaskRepo,
-      required this.getTaskDetailsRepo,
-      required this.getTasksListRepo,
-      required this.createTaskRepo,
-      required this.uploadImageRepo})
+      {required this.deleteTaskUsecase,
+      required this.editTaskUsecase,
+      required this.getTaskDetailsUsecase,
+      required this.getTasksListUsecase,
+      required this.createTaskUseCase,
+      required this.uploadImageUsecase})
       : super(TaskInitial()) {
     prioritySelected = "medium";
     statusSelected = 'waiting';
@@ -155,7 +156,7 @@ class TaskCubit extends Cubit<TaskState> {
   Future<void> uploadImage() async {
     emit(UploadImageLoadingState());
     if (image != null) {
-      final response = await uploadImageRepo.uploadImage(image: image!);
+      final response = await uploadImageUsecase.call(image!);
 
       response.fold(
         (error) {
@@ -184,12 +185,13 @@ class TaskCubit extends Cubit<TaskState> {
 
   Future<void> creatTasks() async {
     emit(CreateTaskLoadingState());
-    final response = await createTaskRepo.createTask(
+    final params = CreateTaskParams(
         image: uploadedImage,
         title: titleController.text,
-        description: descriptionController.text,
+        desc: descriptionController.text,
         dueDate: dueDateController.text,
         priority: prioritySelected);
+    final response = await createTaskUseCase.call(params);
     response.fold((error) {
       emit(CreateTaskErrorState(errorMessage: error));
     }, (createTaskEntity) {
@@ -213,7 +215,7 @@ class TaskCubit extends Cubit<TaskState> {
       hasMoreData = true;
     }
 
-    final response = await getTasksListRepo.getTasksList(page: currentPage);
+    final response = await getTasksListUsecase.call(currentPage);
     response.fold((error) {
       if (loadMore) {
         isLoadingMore = false;
@@ -260,7 +262,7 @@ class TaskCubit extends Cubit<TaskState> {
 
   Future<void> getTaskDetails({required String iD}) async {
     emit(GetTaskDetailsLoadingState());
-    final response = await getTaskDetailsRepo.getTaskDetails(id: iD);
+    final response = await getTaskDetailsUsecase.call(iD);
     response.fold((error) {
       emit(GetTaskDetailsErrorState(errorMessage: error));
     }, (task) {
@@ -280,8 +282,8 @@ class TaskCubit extends Cubit<TaskState> {
     inPogress.clear();
     waiting.clear();
     finished.clear();
-    final response =
-        await editTaskRepo.editTask(id: id, taskDetais: taskDetails);
+    final params = EditTaskParams(id: id, data: taskDetails);
+    final response = await editTaskUsecase.call(params);
     response.fold((error) {
       emit(EditTaskErrorState(errorMessage: error));
     }, (taskEdited) {
@@ -298,7 +300,7 @@ class TaskCubit extends Cubit<TaskState> {
     inPogress.clear();
     waiting.clear();
     finished.clear();
-    final response = await deleteTaskRepo.deleteTask(id: id);
+    final response = await deleteTaskUsecase.call(id);
     response.fold((error) {
       emit(DeleteTaskErrorState(errorMessage: error));
     }, (deleted) {
