@@ -8,22 +8,31 @@ class HomeViewBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: Column(
+        child: Stack(
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: 22, right: 16),
-              child: CustomHomeAppBar(),
+            CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 22, right: 16),
+                        child: CustomHomeAppBar(),
+                      ),
+                      SizedBox(
+                          height: MediaQuery.sizeOf(context).height,
+                          child: const CustomHomeBody()),
+                      const SizedBox(height: 32),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Expanded(
-              child: CustomScrollView(slivers: [
-                SliverFillRemaining(child: CustomHomeBody()),
-              ]),
-            ),
-            CustomFloatingButtons(),
-            SizedBox(height: 32),
+            const Positioned(
+                bottom: 32, right: 0, child: CustomFloatingButtons())
           ],
         ),
       ),
